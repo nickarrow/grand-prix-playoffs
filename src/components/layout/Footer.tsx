@@ -1,6 +1,6 @@
 import { Box, Container, Typography, Link as MuiLink } from '@mui/material';
 
-export function Footer(): JSX.Element {
+export function Footer(): React.ReactElement {
   const currentYear = new Date().getFullYear();
 
   return (

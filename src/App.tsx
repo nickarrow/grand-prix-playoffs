@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export function App(): JSX.Element {
+export function App(): React.ReactElement {
   const { mode } = useThemeStore();
 
   const theme = useMemo(() => {

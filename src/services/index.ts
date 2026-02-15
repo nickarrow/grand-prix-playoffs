@@ -1,2 +1,14 @@
-// API services will be added in Phase 2
-export {};
+// API Services
+export {
+  queryKeys,
+  useSeasonCalendar,
+  useSeasonResults,
+  useRaceResults,
+  useSeasonData,
+} from './api';
+
+// Static data utilities
+export { hasStaticData, loadStaticSeasonData } from './static-data';
+
+// Direct API functions (for use outside React components)
+export { fetchSeasonCalendar, fetchRaceResults, fetchSeasonResults } from './jolpica';

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
@@ -8,6 +8,15 @@ export default defineConfig({
   resolve: {
     alias: {
       src: path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    proxy: {
+      '/api/f1': {
+        target: 'https://api.jolpi.ca/ergast/f1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/f1/, ''),
+      },
     },
   },
   test: {

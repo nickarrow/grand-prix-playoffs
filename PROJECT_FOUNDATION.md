@@ -254,18 +254,34 @@ The app auto-detects the current season state by comparing today's date against 
 
 > API integration and playoff engine
 
-- [ ] Create TypeScript interfaces for F1 data (Driver, Race, Result, etc.)
-- [ ] Implement Jolpica API client
-- [ ] Implement OpenF1 API client (backup)
-- [ ] Create unified API service with fallback logic
-- [ ] Set up TanStack Query with caching configuration
-- [ ] Implement playoff calculation engine:
-  - [ ] Regular season points aggregation
-  - [ ] Playoff qualification (top 10)
-  - [ ] Round-by-round elimination logic
-  - [ ] Championship final determination
-- [ ] Write unit tests for playoff engine
-- [ ] Validate playoff calculations against 2025 API data (completed season)
+- [x] Create TypeScript interfaces for F1 data (Driver, Race, Result, etc.)
+- [x] Implement Jolpica API client
+- [x] Implement OpenF1 API client (backup) - _Skipped: not needed, using static data instead_
+- [x] Create unified API service with fallback logic
+- [x] Set up TanStack Query with caching configuration
+- [x] Implement playoff calculation engine:
+  - [x] Regular season points aggregation
+  - [x] Playoff qualification (top 10)
+  - [x] Round-by-round elimination logic
+  - [x] Championship final determination
+- [x] Write unit tests for playoff engine
+- [x] Validate playoff calculations against 2025 API data (completed season)
+
+**Additional Phase 2 work completed:**
+
+- [x] Static data caching system (pre-fetched JSON for instant loads)
+- [x] Data fetch script (`scripts/fetch-season-data.mjs`)
+- [x] GitHub Actions workflow for automated weekly data updates
+- [x] Vite proxy configuration for local development (CORS workaround)
+- [x] Rate limiting for Jolpica API (4 req/sec limit)
+- [x] 2025 season data pre-cached in `data/2025.json`
+
+**Technical notes:**
+
+- Static data loads instantly; live API only used when static data unavailable
+- GitHub Actions runs every Monday 6AM UTC to update current season data
+- Driver info (names, teams) extracted from race results for display
+- 31 unit tests covering points, standings, tiebreakers, and elimination logic
 
 ### Phase 3: Core UI (Days 6-9)
 

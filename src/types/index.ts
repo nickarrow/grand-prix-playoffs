@@ -1,2 +1,116 @@
-// Type definitions will be added in Phase 2
-export {};
+// Core F1 Data Types
+
+// Driver information
+export interface Driver {
+  driverId: string;
+  code: string; // 3-letter code (e.g., "VER", "HAM")
+  firstName: string;
+  lastName: string;
+  nationality: string;
+  constructorId: string;
+  constructorName: string;
+}
+
+// Race result for a single driver
+export interface RaceResult {
+  driverId: string;
+  position: number | null; // null if DNF/DNS
+  points: number;
+  grid: number;
+  status: string; // "Finished", "Retired", "+1 Lap", etc.
+  fastestLap: boolean;
+  fastestLapRank: number | null;
+}
+
+// Qualifying result for pole position
+export interface QualifyingResult {
+  driverId: string;
+  position: number;
+}
+
+// Sprint race result
+export interface SprintResult {
+  driverId: string;
+  position: number | null;
+  points: number;
+}
+
+// Complete race weekend data
+export interface Race {
+  season: number;
+  round: number;
+  raceName: string;
+  circuitId: string;
+  circuitName: string;
+  country: string;
+  date: string; // ISO date string
+  results: RaceResult[];
+  qualifying: QualifyingResult[];
+  sprint: SprintResult[] | null; // null if no sprint that weekend
+}
+
+// Season calendar entry
+export interface RaceCalendar {
+  season: number;
+  round: number;
+  raceName: string;
+  circuitId: string;
+  circuitName: string;
+  country: string;
+  date: string;
+  hasSprintRace: boolean;
+}
+
+// Full season data
+export interface Season {
+  year: number;
+  races: Race[];
+  calendar: RaceCalendar[];
+  drivers: Driver[];
+}
+
+// Playoff-specific types
+
+export type PlayoffStatus = 'qualified' | 'advancing' | 'eliminated' | 'champion' | 'not-qualified';
+
+// Driver standing at any point in the season
+export interface DriverStanding {
+  driver: Driver;
+  points: number;
+  wins: number;
+  podiums: number;
+  position: number;
+  positionHistory: number[]; // For tiebreaker: count of 1sts, 2nds, 3rds, etc.
+}
+
+// Playoff round result
+export interface PlayoffRound {
+  round: number; // 1, 2, 3, or 4 (final)
+  raceNumbers: number[]; // Which race rounds are in this playoff round
+  standings: DriverStanding[];
+  eliminated: string[]; // driverIds eliminated this round
+  advancing: string[]; // driverIds advancing to next round
+}
+
+// Complete playoff state for a season
+export interface PlayoffState {
+  season: number;
+  totalRaces: number;
+  regularSeasonRaces: number;
+  playoffStartRace: number;
+  regularSeasonStandings: DriverStanding[];
+  qualifiedDrivers: string[]; // Top 10 driverIds
+  rounds: PlayoffRound[];
+  champion: string | null; // driverId of champion
+  status: SeasonStatus;
+}
+
+// Season phase detection
+export type SeasonStatus = 'pre-season' | 'regular-season' | 'playoffs' | 'completed';
+
+// API response types (for internal use)
+export interface ApiError {
+  message: string;
+  status?: number;
+  source: 'jolpica' | 'openf1' | 'local';
+}

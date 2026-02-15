@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update-data": "node scripts/fetch-season-data.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

@@ -1,7 +1,7 @@
 import { Box, Container, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
-export function SeasonPage(): JSX.Element {
+export function SeasonPage(): React.ReactElement {
   const { year } = useParams<{ year: string }>();
 
   return (

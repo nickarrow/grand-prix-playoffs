@@ -1,6 +1,6 @@
 import { Box, Container, Typography, Divider } from '@mui/material';
 
-export function AboutPage(): JSX.Element {
+export function AboutPage(): React.ReactElement {
   return (
     <Container maxWidth="md">
       <Box sx={{ py: { xs: 4, md: 6 } }}>

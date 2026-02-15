@@ -1,8 +1,12 @@
 // API and App Configuration
 
 // API Base URLs
-export const JOLPICA_API_BASE_URL =
-  import.meta.env.VITE_JOLPICA_API_URL || 'https://api.jolpi.ca/ergast/f1';
+// In development, use proxy to avoid CORS issues
+const isDev = import.meta.env.DEV;
+
+export const JOLPICA_API_BASE_URL = isDev
+  ? '/api/f1'
+  : import.meta.env.VITE_JOLPICA_API_URL || 'https://api.jolpi.ca/ergast/f1';
 
 export const OPENF1_API_BASE_URL =
   import.meta.env.VITE_OPENF1_API_URL || 'https://api.openf1.org/v1';

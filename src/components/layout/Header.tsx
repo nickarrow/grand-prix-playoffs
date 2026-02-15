@@ -26,7 +26,7 @@ const NAV_ITEMS = [
   { label: 'About', path: '/about' },
 ] as const;
 
-export function Header(): JSX.Element {
+export function Header(): React.ReactElement {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { mode, toggleMode } = useThemeStore();
   const theme = useTheme();
