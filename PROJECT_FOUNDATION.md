@@ -24,15 +24,15 @@ This is not a replacement for the official standings. It is a competitive altern
 
 The last 7 races of any F1 season constitute the playoffs. The remaining races form the regular season.
 
-| Phase | Races | Drivers | Outcome |
-|-------|-------|---------|---------|
-| Regular Season | 1 through (N-7) | All | Top 10 by points qualify |
-| Playoff Round 1 | (N-6) and (N-5) | 10 | Bottom 2 eliminated → 8 remain |
-| Playoff Round 2 | (N-4) and (N-3) | 8 | Bottom 2 eliminated → 6 remain |
-| Playoff Round 3 | (N-2) and (N-1) | 6 | Bottom 2 eliminated → 4 remain |
-| Championship Final | N (last race) | 4 | Winner takes title |
+| Phase              | Races           | Drivers | Outcome                        |
+| ------------------ | --------------- | ------- | ------------------------------ |
+| Regular Season     | 1 through (N-7) | All     | Top 10 by points qualify       |
+| Playoff Round 1    | (N-6) and (N-5) | 10      | Bottom 2 eliminated → 8 remain |
+| Playoff Round 2    | (N-4) and (N-3) | 8       | Bottom 2 eliminated → 6 remain |
+| Playoff Round 3    | (N-2) and (N-1) | 6       | Bottom 2 eliminated → 4 remain |
+| Championship Final | N (last race)   | 4       | Winner takes title             |
 
-*For a 24-race season: Regular season = races 1-17, Playoffs = races 18-24*
+_For a 24-race season: Regular season = races 1-17, Playoffs = races 18-24_
 
 ### Points System
 
@@ -49,6 +49,7 @@ All standard F1 points contribute to standings:
 | Points | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |
 
 **Bonus Points**
+
 - Pole Position: 1 point (driver who qualifies P1)
 - Fastest Lap: 1 point (if driver finishes in top 10)
 
@@ -74,27 +75,28 @@ All standard F1 points contribute to standings:
 
 ### Stack
 
-| Layer | Technology |
-|-------|------------|
-| Build Tool | Vite |
-| Framework | React 18 |
-| Language | TypeScript (strict mode) |
-| UI Library | Material UI (MUI) v5 |
-| Routing | React Router v6 |
-| Server State | TanStack Query v5 |
-| Client State | Zustand |
-| Styling | Emotion (via MUI) |
-| Testing | Vitest + React Testing Library |
-| Linting | ESLint + Prettier |
-| Icons | Lucide React |
-| Git Hooks | Husky + lint-staged |
-| Hosting | Cloudflare Pages |
-| Analytics | Cloudflare Web Analytics |
-| Domain | grandprixplayoffs.com |
+| Layer        | Technology                     |
+| ------------ | ------------------------------ |
+| Build Tool   | Vite                           |
+| Framework    | React 18                       |
+| Language     | TypeScript (strict mode)       |
+| UI Library   | Material UI (MUI) v5           |
+| Routing      | React Router v6                |
+| Server State | TanStack Query v5              |
+| Client State | Zustand                        |
+| Styling      | Emotion (via MUI)              |
+| Testing      | Vitest + React Testing Library |
+| Linting      | ESLint + Prettier              |
+| Icons        | Lucide React                   |
+| Git Hooks    | Husky + lint-staged            |
+| Hosting      | Cloudflare Pages               |
+| Analytics    | Cloudflare Web Analytics       |
+| Domain       | grandprixplayoffs.com          |
 
 ### Data Strategy
 
 **Primary API: Jolpica-F1**
+
 - Base URL: `https://api.jolpi.ca/ergast/f1/`
 - Endpoints used:
   - `/{year}` - Season calendar
@@ -105,6 +107,7 @@ All standard F1 points contribute to standings:
 - Rate limits: 4 req/sec, 200 req/hour
 
 **Backup API: OpenF1**
+
 - Base URL: `https://api.openf1.org/v1/`
 - Used when Jolpica is unavailable
 - Also provides driver photos and team colors
@@ -116,10 +119,12 @@ All standard F1 points contribute to standings:
   - `/championship_drivers` - Championship standings (beta)
 
 **Fallback: Local JSON**
+
 - Static JSON files mirroring API structure
 - Manual update capability if both APIs fail
 
 **Data Flow**
+
 ```
 User Request → TanStack Query → Jolpica API
                                     ↓ (on error)
@@ -196,25 +201,25 @@ grand-prix-playoffs/
 
 ### Navigation
 
-| Route | Page | Purpose |
-|-------|------|---------|
-| `/` | Home | Current/latest season standings + playoff bracket |
-| `/2025` | Season | 2025 completed season view |
-| `/2026` | Season | 2026 live season view |
-| `/about` | About | Philosophy, rules, format explanation |
+| Route    | Page   | Purpose                                           |
+| -------- | ------ | ------------------------------------------------- |
+| `/`      | Home   | Current/latest season standings + playoff bracket |
+| `/2025`  | Season | 2025 completed season view                        |
+| `/2026`  | Season | 2026 live season view                             |
+| `/about` | About  | Philosophy, rules, format explanation             |
 
-*Note: Home (`/`) shows 2025 until 2026 season begins, then switches to 2026*
+_Note: Home (`/`) shows 2025 until 2026 season begins, then switches to 2026_
 
 ### Season State Detection
 
 The app auto-detects the current season state by comparing today's date against the race calendar:
 
-| State | Condition | Display |
-|-------|-----------|---------|
-| Pre-season | Before race 1 date | "Season starts [date]" + previous season |
-| Regular Season | Between race 1 and race (N-7) | Current standings, races remaining |
-| Playoffs | Between race (N-6) and race N | Playoff bracket, elimination status |
-| Completed | After final race | Final results, champion crowned |
+| State          | Condition                     | Display                                  |
+| -------------- | ----------------------------- | ---------------------------------------- |
+| Pre-season     | Before race 1 date            | "Season starts [date]" + previous season |
+| Regular Season | Between race 1 and race (N-7) | Current standings, races remaining       |
+| Playoffs       | Between race (N-6) and race N | Playoff bracket, elimination status      |
+| Completed      | After final race              | Final results, champion crowned          |
 
 ### Key UI Components
 
@@ -231,20 +236,22 @@ The app auto-detects the current season state by comparing today's date against 
 ### Timeline: Feb 15 - Feb 28, 2026 (14 days)
 
 ### Phase 1: Foundation (Days 1-2)
+
 > Project setup, tooling, basic structure
 
-- [ ] Initialize Vite + React + TypeScript project
-- [ ] Configure ESLint, Prettier, TypeScript strict mode
-- [ ] Set up Husky + lint-staged for pre-commit hooks
-- [ ] Install and configure MUI with custom theme (dark/light)
-- [ ] Install Lucide React for icons
-- [ ] Set up React Router with basic route structure
-- [ ] Create project folder structure
-- [ ] Initialize Git repository and push to GitHub
-- [ ] Create README.md, CONTRIBUTING.md, and LICENSE (MIT)
-- [ ] Set up Kiro steering docs for dev standards
+- [x] Initialize Vite + React + TypeScript project
+- [x] Configure ESLint, Prettier, TypeScript strict mode
+- [x] Set up Husky + lint-staged for pre-commit hooks
+- [x] Install and configure MUI with custom theme (dark/light)
+- [x] Install Lucide React for icons
+- [x] Set up React Router with basic route structure
+- [x] Create project folder structure
+- [x] Initialize Git repository and push to GitHub
+- [x] Create README.md, CONTRIBUTING.md, and LICENSE (MIT)
+- [x] Set up Kiro steering docs for dev standards
 
 ### Phase 2: Data Layer (Days 3-5)
+
 > API integration and playoff engine
 
 - [ ] Create TypeScript interfaces for F1 data (Driver, Race, Result, etc.)
@@ -261,6 +268,7 @@ The app auto-detects the current season state by comparing today's date against 
 - [ ] Validate playoff calculations against 2025 API data (completed season)
 
 ### Phase 3: Core UI (Days 6-9)
+
 > Main views and components
 
 - [ ] Build layout components (Header, Footer, Navigation)
@@ -276,6 +284,7 @@ The app auto-detects the current season state by comparing today's date against 
 - [ ] Add loading states and error handling
 
 ### Phase 4: Polish & Integration (Days 10-12)
+
 > Connect everything, refine UX
 
 - [ ] Integrate 2025 season data via API
@@ -289,6 +298,7 @@ The app auto-detects the current season state by comparing today's date against 
 - [ ] Accessibility review (keyboard nav, screen readers, contrast)
 
 ### Phase 5: Deployment (Days 13-14)
+
 > Go live
 
 - [ ] Set up Cloudflare Pages project
@@ -382,5 +392,5 @@ Grand Prix Playoffs is an independent fan project and is not affiliated with, en
 
 ---
 
-*Document created: February 15, 2026*
-*Target launch: February 28, 2026*
+_Document created: February 15, 2026_
+_Target launch: February 28, 2026_
