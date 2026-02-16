@@ -1,5 +1,23 @@
 // Color palette for Grand Prix Playoffs
 
+// Podium trophy colors
+export const PODIUM_COLORS = {
+  gold: '#FFD700',
+  silver: '#C0C0C0',
+  bronze: '#CD7F32',
+} as const;
+
+// Points breakdown colors
+export const POINTS_COLORS = {
+  race: 'text.secondary', // Gray - uses theme token
+  sprint: 'info.main', // Blue - uses theme token
+  pole: 'warning.main', // Yellow - uses theme token
+  fastestLap: '#BB86FC', // Purple (F1's official fastest lap color)
+} as const;
+
+// Elimination marker color
+export const ELIMINATION_COLOR = '#FF6B6B';
+
 export const palette = {
   // Primary - Racing red
   primary: {

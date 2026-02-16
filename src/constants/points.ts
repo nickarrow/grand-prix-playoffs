@@ -16,3 +16,9 @@ export const SPRINT_POINTS_POSITIONS = 8;
 
 // Fastest lap eligibility (must finish in top N)
 export const FASTEST_LAP_ELIGIBILITY_POSITION = 10;
+
+// Podium positions (top 3)
+export const PODIUM_POSITIONS = 3;
+
+// Pole position
+export const POLE_POSITION = 1;

@@ -2,3 +2,4 @@
 export * from './points';
 export * from './playoffs';
 export * from './config';
+export * from './teams';

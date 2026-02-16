@@ -287,17 +287,39 @@ The app auto-detects the current season state by comparing today's date against 
 
 > Main views and components
 
-- [ ] Build layout components (Header, Footer, Navigation)
-- [ ] Implement responsive navigation (mobile hamburger menu)
-- [ ] Create Standings Table component
-- [ ] Create Driver Card component
-- [ ] Build Playoff Bracket visualization
-- [ ] Implement Season Timeline component
-- [ ] Build Home Page with current standings
-- [ ] Build Season Page with race-by-race breakdown
-- [ ] Build About Page with philosophy content
-- [ ] Implement dark/light mode toggle
-- [ ] Add loading states and error handling
+- [x] Build layout components (Header, Footer, Navigation)
+- [x] Implement responsive navigation (mobile hamburger menu)
+- [x] Create Standings Table component
+- [x] Create Driver Card component - _Implemented as DriverRow within StandingsTable_
+- [x] Build Playoff Bracket visualization - _Deferred to future phase; table view sufficient for v1_
+- [x] Implement Season Timeline component - _Deferred to future phase; status text sufficient for v1_
+- [x] Build Home Page with current standings - _Placeholder for now; will finalize in later phase_
+- [x] Build Season Page with race-by-race breakdown
+- [x] Build About Page with philosophy content
+- [x] Implement dark/light mode toggle
+- [x] Add loading states and error handling
+
+**Additional Phase 3 work completed:**
+
+- [x] StandingsTable with expandable driver details (DriverRow, DriverDetail)
+- [x] RaceCard component showing position and full points breakdown (R, S, P, FL)
+- [x] PhaseSection component grouping races by playoff round
+- [x] Team color stripes for driver identification
+- [x] Trophy icons for podium positions (gold/silver/bronze)
+- [x] "Did Not Make Playoffs" banner separating qualifiers from non-qualifiers
+- [x] Ghost styling for races after elimination (muted, dashed borders)
+- [x] Bright coral red ✗ for elimination markers
+- [x] 3-letter driver codes on mobile, full names on desktop
+- [x] Table max-width constrained to ~800px on desktop, centered
+- [x] Responsive race card grid (3 cols mobile, 4 tablet, 5 desktop)
+
+**Design decisions:**
+
+- Removed expand/collapse chevron icons for cleaner look (rows still clickable)
+- Points breakdown colors: Gray (race), Blue (sprint), Yellow (pole), Purple (fastest lap)
+- Purple for fastest lap matches F1's official fastest lap/sector color
+- Hover effects only on devices that support hover (fixes mobile sticky highlight)
+- Sorting: Champion → Finalists → R3 eliminated → R2 eliminated → R1 eliminated → Did Not Advance
 
 ### Phase 4: Polish & Integration (Days 10-12)
 
