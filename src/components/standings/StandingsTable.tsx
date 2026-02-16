@@ -160,7 +160,7 @@ export function StandingsTable({
             />
           ))}
 
-          {/* Did Not Make Playoffs banner */}
+          {/* Did Not Advance to Playoffs banner */}
           {nonQualifiers.length > 0 && (
             <TableRow>
               <TableCell
@@ -186,9 +186,10 @@ export function StandingsTable({
                       letterSpacing: 1,
                       fontSize: '0.65rem',
                       textTransform: 'uppercase',
+                      fontStyle: 'italic',
                     }}
                   >
-                    Did Not Make Playoffs
+                    Did Not Advance to Playoffs
                   </Typography>
                 </Box>
               </TableCell>

@@ -6,7 +6,7 @@ Grand Prix Playoffs is an independent, fan-made web application that restructure
 
 ## Features
 
-- **Playoff Format**: Top 10 drivers qualify, elimination rounds narrow to 4 finalists
+- **Playoff Format**: Top 10 drivers advance, elimination rounds narrow to 4 finalists
 - **Live Data**: Automatic race results via F1 APIs
 - **Season Tracking**: Follow 2025 (historical) and 2026 (live) seasons
 - **Mobile-First**: Responsive design for all devices

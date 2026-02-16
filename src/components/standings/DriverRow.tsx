@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { Box, Collapse, TableCell, TableRow, Typography } from '@mui/material';
 import { Trophy } from 'lucide-react';
 
+import { useTheme } from '@mui/material/styles';
+
 import type { Driver, PlayoffState, PlayoffRound, Race } from 'src/types';
 import { getTeamColor, PODIUM_POSITIONS } from 'src/constants';
 import { PODIUM_COLORS, ELIMINATION_COLOR } from 'src/theme/palette';
@@ -37,6 +39,8 @@ export function DriverRow({
   allRaces,
 }: DriverRowProps): React.ReactElement {
   const [expanded, setExpanded] = useState(false);
+  const theme = useTheme();
+  const mode = theme.palette.mode;
 
   const { rounds, qualifiedDrivers, champion } = playoffState;
   const didQualify = qualifiedDrivers.includes(driver.driverId);
@@ -72,8 +76,9 @@ export function DriverRow({
   const eliminatedR3 = wasEliminatedIn(round3, driver.driverId);
   const isEliminated = eliminatedR1 || eliminatedR2 || eliminatedR3;
 
-  // Podium positions (1st, 2nd, 3rd in final standings)
-  const isPodium = position <= PODIUM_POSITIONS && didQualify && !isEliminated;
+  // Only show podium trophies for completed seasons
+  const isSeasonComplete = playoffState.status === 'completed';
+  const isPodium = isSeasonComplete && position <= PODIUM_POSITIONS && didQualify && !isEliminated;
 
   const renderPointsCell = (
     points: number | null,
@@ -91,7 +96,11 @@ export function DriverRow({
       return (
         <Typography
           variant="body2"
-          sx={{ textAlign: 'right', color: ELIMINATION_COLOR, fontWeight: 700 }}
+          sx={{
+            textAlign: 'right',
+            color: mode === 'dark' ? ELIMINATION_COLOR.dark : ELIMINATION_COLOR.light,
+            fontWeight: 700,
+          }}
         >
           ✗
         </Typography>
@@ -150,9 +159,24 @@ export function DriverRow({
             >
               {driver.firstName} {driver.lastName}
             </Typography>
-            {isChampion && <Trophy size={14} color={PODIUM_COLORS.gold} />}
-            {position === 2 && isPodium && <Trophy size={14} color={PODIUM_COLORS.silver} />}
-            {position === 3 && isPodium && <Trophy size={14} color={PODIUM_COLORS.bronze} />}
+            {isSeasonComplete && isChampion && (
+              <Trophy
+                size={14}
+                color={mode === 'dark' ? PODIUM_COLORS.gold.dark : PODIUM_COLORS.gold.light}
+              />
+            )}
+            {position === 2 && isPodium && (
+              <Trophy
+                size={14}
+                color={mode === 'dark' ? PODIUM_COLORS.silver.dark : PODIUM_COLORS.silver.light}
+              />
+            )}
+            {position === 3 && isPodium && (
+              <Trophy
+                size={14}
+                color={mode === 'dark' ? PODIUM_COLORS.bronze.dark : PODIUM_COLORS.bronze.light}
+              />
+            )}
           </Box>
         </TableCell>
 

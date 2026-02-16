@@ -26,19 +26,25 @@ export function determineSeasonStatus(
   const firstRaceDate = new Date(calendar[0]?.date ?? '');
   const playoffStartRace = totalRaces - PLAYOFF_RACES + 1;
 
-  // Before first race
+  // If we have completed races, we're not in pre-season
+  // (This handles stub data for testing future seasons)
+  if (completedRaces > 0) {
+    // After last race and all races completed
+    if (completedRaces >= totalRaces) {
+      return 'completed';
+    }
+
+    // In playoffs (completed races >= playoff start race)
+    if (completedRaces >= playoffStartRace) {
+      return 'playoffs';
+    }
+
+    return 'regular-season';
+  }
+
+  // No completed races - check if season has started by date
   if (currentDate < firstRaceDate) {
     return 'pre-season';
-  }
-
-  // After last race and all races completed
-  if (completedRaces >= totalRaces) {
-    return 'completed';
-  }
-
-  // In playoffs (completed races >= playoff start race)
-  if (completedRaces >= playoffStartRace) {
-    return 'playoffs';
   }
 
   return 'regular-season';

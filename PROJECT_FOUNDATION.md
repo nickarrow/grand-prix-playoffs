@@ -325,15 +325,39 @@ The app auto-detects the current season state by comparing today's date against 
 
 > Connect everything, refine UX
 
-- [ ] Integrate 2025 season data via API
-- [ ] Verify playoff calculations match expected results
-- [ ] Add season auto-detection (regular season vs playoffs vs completed)
-- [ ] Implement season selector dropdown
-- [ ] Add animations and transitions
-- [ ] Mobile responsiveness testing and fixes
-- [ ] Cross-browser testing
-- [ ] Performance optimization (lazy loading, code splitting)
-- [ ] Accessibility review (keyboard nav, screen readers, contrast)
+- [x] Integrate 2025 season data via API
+- [x] Verify playoff calculations match expected results
+- [x] Add season auto-detection (regular season vs playoffs vs completed)
+- [x] Implement season selector dropdown - _Simplified: direct nav links instead of dropdown_
+- [x] Add animations and transitions - _Minimal: Collapse animation on driver detail expand_
+- [x] Mobile responsiveness testing and fixes
+- [x] Cross-browser testing
+- [x] Performance optimization (lazy loading, code splitting) - _Static data caching approach_
+- [x] Accessibility review (keyboard nav, screen readers, contrast)
+
+**Additional Phase 4 work completed:**
+
+- [x] WCAG AA color contrast fixes for both light/dark modes (palette.ts)
+- [x] Mode-aware colors for trophies, points breakdown, elimination markers
+- [x] Trophy display logic: only show for completed seasons
+- [x] Season status detection prioritizes completed race count over dates
+- [x] HomePage with hero section, tagline, and embedded 2026 standings
+- [x] AboutPage rewritten with full format explanation, points system, tiebreakers
+- [x] PlayoffExplainer component (collapsible, localStorage persistence)
+- [x] SeasonPage status text: contextual messages for each season state
+- [x] "Did Not Advance to Playoffs" banner styled italic
+- [x] Format breakdown on About page: simplified two-column layout (no table)
+- [x] All magic numbers replaced with constants from src/constants/
+- [x] CURRENT_SEASON constant added to config.ts
+- [x] ESLint, TypeScript, Prettier all passing
+- [x] 31 unit tests passing
+
+**Design decisions:**
+
+- 2026 data left empty, waiting for real API data when season starts
+- Explainer is collapsible (not permanently dismissible) for better UX
+- Homepage copy: "The F1 championship, reimagined" tagline with clear value prop
+- Hero buttons sized medium for better visual hierarchy
 
 ### Phase 5: Deployment (Days 13-14)
 

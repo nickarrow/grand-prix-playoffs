@@ -1,2 +1,2 @@
-// Common components will be added as needed
-export {};
+// Common components
+export { PlayoffExplainer } from './PlayoffExplainer';

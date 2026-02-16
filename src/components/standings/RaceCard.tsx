@@ -2,6 +2,7 @@
 // Shows race name, position, and full points breakdown
 
 import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import type { Race } from 'src/types';
 import { PODIUM_POSITIONS, POLE_POSITION } from 'src/constants';
@@ -37,6 +38,9 @@ function formatPosition(position: number | null, status: string): string {
 }
 
 export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): React.ReactElement {
+  const theme = useTheme();
+  const mode = theme.palette.mode;
+
   const raceResult = race.results.find((r) => r.driverId === driverId);
   const sprintResult = race.sprint?.find((s) => s.driverId === driverId);
   const qualifyingResult = race.qualifying.find((q) => q.driverId === driverId);
@@ -60,14 +64,12 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
     <Box
       sx={{
         p: 1,
-        bgcolor: isGhost ? 'transparent' : 'background.paper',
+        bgcolor: isGhost ? 'action.hover' : 'background.paper',
         borderRadius: 1,
         textAlign: 'center',
         border: 1,
         borderColor: isGhost ? 'divider' : isWin ? 'primary.main' : 'divider',
         borderStyle: isGhost ? 'dashed' : 'solid',
-        opacity: isGhost ? 0.5 : 1,
-        filter: isGhost ? 'grayscale(70%)' : 'none',
         minWidth: 75,
       }}
     >
@@ -76,7 +78,7 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
         variant="caption"
         color="text.secondary"
         display="block"
-        sx={{ fontSize: '0.65rem', lineHeight: 1.2, mb: 0.5 }}
+        sx={{ fontSize: '0.7rem', lineHeight: 1.2, mb: 0.5 }}
       >
         {getShortRaceName(race.raceName)}
       </Typography>
@@ -109,24 +111,40 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
           }}
         >
           {points.race > 0 && (
-            <Typography variant="caption" sx={{ fontSize: '0.6rem', color: 'text.secondary' }}>
+            <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>
               R:{points.race}
             </Typography>
           )}
           {points.sprint > 0 && (
-            <Typography variant="caption" sx={{ fontSize: '0.6rem', color: 'info.main' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                fontSize: '0.7rem',
+                color: mode === 'dark' ? POINTS_COLORS.sprint.dark : POINTS_COLORS.sprint.light,
+              }}
+            >
               S:{points.sprint}
             </Typography>
           )}
           {points.pole > 0 && (
-            <Typography variant="caption" sx={{ fontSize: '0.6rem', color: 'warning.main' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                fontSize: '0.7rem',
+                color: mode === 'dark' ? POINTS_COLORS.pole.dark : POINTS_COLORS.pole.light,
+              }}
+            >
               P:1
             </Typography>
           )}
           {points.fastestLap > 0 && (
             <Typography
               variant="caption"
-              sx={{ fontSize: '0.6rem', color: POINTS_COLORS.fastestLap }}
+              sx={{
+                fontSize: '0.7rem',
+                color:
+                  mode === 'dark' ? POINTS_COLORS.fastestLap.dark : POINTS_COLORS.fastestLap.light,
+              }}
             >
               FL:1
             </Typography>
