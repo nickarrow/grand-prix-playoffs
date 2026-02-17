@@ -21,8 +21,8 @@ export function AboutPage(): React.ReactElement {
         </Typography>
 
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4, lineHeight: 1.7 }}>
-          An independent reimagining of the Formula 1 World Drivers' Championship. We take real race
-          results and apply an elimination playoff format — same races, different stakes.
+          An independent, fan made, reimagining of the Formula 1 World Drivers' Championship. We
+          take real race results and apply an elimination playoff format.
         </Typography>
 
         {/* Philosophy */}
@@ -32,20 +32,13 @@ export function AboutPage(): React.ReactElement {
         <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
           For decades, the F1 title has been decided by cumulative points over a long season. While
           consistency is rewarded, championships are often mathematically decided before the final
-          race. Grand Prix Playoffs introduces a different standard: the title should be decided
-          under elimination pressure, on track, at the season finale.
+          race (except that one time in 2021).
         </Typography>
-        <Box component="ul" sx={{ pl: 3, mb: 4 }}>
-          <Typography component="li" variant="body1" sx={{ mb: 0.5 }}>
-            Merit — Reward performance across the full season
-          </Typography>
-          <Typography component="li" variant="body1" sx={{ mb: 0.5 }}>
-            Pressure — Demand excellence when elimination is real
-          </Typography>
-          <Typography component="li" variant="body1">
-            Finality — The championship is always decided at the final race
-          </Typography>
-        </Box>
+
+        <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
+          Grand Prix Playoffs introduces a different standard: the title should be decided under
+          elimination pressure, on track, at the season finale.
+        </Typography>
 
         <Divider sx={{ my: 4 }} />
 
