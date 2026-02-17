@@ -8,9 +8,8 @@ on:
   workflow_dispatch:
     inputs:
       year:
-        description: 'Season year to update'
+        description: 'Season year to update (leave empty for current year)'
         required: false
-        default: '2026'
 
 jobs:
   update-data:
@@ -29,7 +28,10 @@ jobs:
 
       - name: Fetch season data
         run: |
-          YEAR="${{ github.event.inputs.year || '2026' }}"
+          YEAR="${{ github.event.inputs.year }}"
+          if [ -z "$YEAR" ]; then
+            YEAR=$(date +%Y)
+          fi
           echo "Fetching data for $YEAR season..."
           node scripts/fetch-season-data.mjs $YEAR
 
@@ -47,8 +49,12 @@ jobs:
       - name: Commit and push changes
         if: steps.changes.outputs.changed == 'true'
         run: |
+          YEAR="${{ github.event.inputs.year }}"
+          if [ -z "$YEAR" ]; then
+            YEAR=$(date +%Y)
+          fi
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add data/
-          git commit -m "chore(data): update ${{ github.event.inputs.year || '2026' }} season data"
+          git commit -m "chore(data): update $YEAR season data"
           git push
