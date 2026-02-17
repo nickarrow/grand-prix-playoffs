@@ -21,6 +21,7 @@ import { useThemeStore } from 'src/store';
 
 const NAV_ITEMS = [
   { label: 'Home', path: '/' },
+  { label: '2024', path: '/2024' },
   { label: '2025', path: '/2025' },
   { label: '2026', path: '/2026' },
   { label: 'About', path: '/about' },

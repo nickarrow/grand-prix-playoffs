@@ -16,7 +16,7 @@ export const CACHE_STALE_TIME = 5 * 60 * 1000; // 5 minutes
 export const CACHE_GC_TIME = 30 * 60 * 1000; // 30 minutes
 
 // Supported seasons
-export const SUPPORTED_SEASONS = [2025, 2026] as const;
+export const SUPPORTED_SEASONS = [2024, 2025, 2026] as const;
 export const DEFAULT_SEASON = 2025;
 export const CURRENT_SEASON = 2026;
 

@@ -38,7 +38,14 @@ export function HomePage(): React.ReactElement {
             championship as a playoff where the top 10 drivers from the regular season advance to a
             7-race playoff until only 4 drivers remain for a winner-take-all finale.
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: { xs: 'flex-start', md: 'center' } }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: { xs: 'flex-start', md: 'center' },
+              gap: 1,
+            }}
+          >
             <Button
               component={RouterLink}
               to="/about"
@@ -48,15 +55,26 @@ export function HomePage(): React.ReactElement {
             >
               How it works
             </Button>
-            <Button
-              component={RouterLink}
-              to="/2025"
-              variant="text"
-              size="medium"
-              sx={{ textTransform: 'none' }}
-            >
-              View 2025 results
-            </Button>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                component={RouterLink}
+                to="/2024"
+                variant="text"
+                size="medium"
+                sx={{ textTransform: 'none' }}
+              >
+                View 2024 results
+              </Button>
+              <Button
+                component={RouterLink}
+                to="/2025"
+                variant="text"
+                size="medium"
+                sx={{ textTransform: 'none' }}
+              >
+                View 2025 results
+              </Button>
+            </Box>
           </Box>
         </Box>
 

@@ -52,6 +52,10 @@ interface StaticSeasonData {
 async function loadStaticDataModule(year: number): Promise<StaticSeasonData | null> {
   try {
     switch (year) {
+      case 2024: {
+        const module = await import('../../data/2024.json');
+        return module.default as StaticSeasonData;
+      }
       case 2025: {
         const module = await import('../../data/2025.json');
         return module.default as StaticSeasonData;
@@ -70,7 +74,7 @@ async function loadStaticDataModule(year: number): Promise<StaticSeasonData | nu
 
 // Check if static data exists for a season
 export function hasStaticData(year: number): boolean {
-  return year === 2025 || year === 2026;
+  return year === 2024 || year === 2025 || year === 2026;
 }
 
 // Load static season data
