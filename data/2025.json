@@ -9698,7 +9698,88 @@
           "fastestLapRank": 7
         }
       ],
-      "qualifying": [],
+      "qualifying": [
+        {
+          "driverId": "max_verstappen",
+          "position": 1
+        },
+        {
+          "driverId": "norris",
+          "position": 2
+        },
+        {
+          "driverId": "piastri",
+          "position": 3
+        },
+        {
+          "driverId": "russell",
+          "position": 4
+        },
+        {
+          "driverId": "leclerc",
+          "position": 5
+        },
+        {
+          "driverId": "alonso",
+          "position": 6
+        },
+        {
+          "driverId": "bortoleto",
+          "position": 7
+        },
+        {
+          "driverId": "ocon",
+          "position": 8
+        },
+        {
+          "driverId": "hadjar",
+          "position": 9
+        },
+        {
+          "driverId": "tsunoda",
+          "position": 10
+        },
+        {
+          "driverId": "bearman",
+          "position": 11
+        },
+        {
+          "driverId": "sainz",
+          "position": 12
+        },
+        {
+          "driverId": "lawson",
+          "position": 13
+        },
+        {
+          "driverId": "antonelli",
+          "position": 14
+        },
+        {
+          "driverId": "stroll",
+          "position": 15
+        },
+        {
+          "driverId": "hamilton",
+          "position": 16
+        },
+        {
+          "driverId": "albon",
+          "position": 17
+        },
+        {
+          "driverId": "hulkenberg",
+          "position": 18
+        },
+        {
+          "driverId": "gasly",
+          "position": 19
+        },
+        {
+          "driverId": "colapinto",
+          "position": 20
+        }
+      ],
       "sprint": null
     }
   ]
