@@ -37,10 +37,10 @@ export const POINTS_COLORS = {
   },
 } as const;
 
-// Elimination marker color - adjusted for both modes
+// Elimination marker color - same red for both modes (passes AA contrast)
 export const ELIMINATION_COLOR = {
-  light: '#C62828', // Dark red - 6.5:1 on white
-  dark: '#FF6B6B', // Coral red - 6.2:1 on dark
+  light: '#C62828', // Dark red - 6.5:1 on white, 4.8:1 on dark
+  dark: '#C62828', // Same dark red - consistent across modes
 } as const;
 
 export const palette = {

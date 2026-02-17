@@ -1,8 +1,13 @@
 // Phase section component - groups race cards under a phase header
 
-import { Box, Typography } from '@mui/material';
+import { useState } from 'react';
+
+import { Box, Collapse, Paper, Typography } from '@mui/material';
+import { ChevronRight } from 'lucide-react';
+import { useTheme } from '@mui/material/styles';
 
 import type { Race } from 'src/types';
+import { ELIMINATION_COLOR } from 'src/theme/palette';
 
 import { RaceCard } from './RaceCard';
 
@@ -16,7 +21,11 @@ interface PhaseSectionProps {
   isEliminated?: boolean;
   isGhost?: boolean;
   label?: string;
+  accentColor?: string;
 }
+
+const CHEVRON_ICON_SIZE = 16;
+const ACCENT_BORDER_WIDTH = 3;
 
 function getPhaseLabel(type: PhaseType, label?: string): string {
   if (label) return label;
@@ -46,57 +55,113 @@ export function PhaseSection({
   isEliminated = false,
   isGhost = false,
   label,
+  accentColor,
 }: PhaseSectionProps): React.ReactElement {
+  const [expanded, setExpanded] = useState(false);
+  const theme = useTheme();
+  const mode = theme.palette.mode;
+  const eliminationColor = mode === 'dark' ? ELIMINATION_COLOR.dark : ELIMINATION_COLOR.light;
   const phaseLabel = getPhaseLabel(type, label);
 
   return (
-    <Box sx={{ mb: 2 }}>
-      {/* Phase header */}
-      <Typography
-        variant="subtitle2"
+    <Paper
+      variant="outlined"
+      sx={{
+        mb: 1,
+        overflow: 'hidden',
+        borderLeft: accentColor ? `${ACCENT_BORDER_WIDTH}px solid ${accentColor}` : undefined,
+        opacity: isGhost ? 0.7 : 1,
+      }}
+    >
+      {/* Phase header - clickable to expand/collapse */}
+      <Box
+        onClick={() => setExpanded(!expanded)}
         sx={{
-          mb: 1.5,
-          fontWeight: 600,
-          fontStyle: isGhost ? 'italic' : 'normal',
-          color: isGhost ? 'text.secondary' : 'text.primary',
-          opacity: isGhost ? 0.7 : 1,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          cursor: 'pointer',
+          p: 1.5,
+          bgcolor: 'background.paper',
+          // Only apply hover on devices that support it (not touch)
+          '@media (hover: hover)': {
+            '&:hover': { bgcolor: 'action.hover' },
+          },
         }}
       >
-        {phaseLabel}
-        {!isGhost && ` (${points} pts)`}
+        <ChevronRight
+          size={CHEVRON_ICON_SIZE}
+          style={{
+            transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease',
+            opacity: isGhost ? 0.5 : 0.7,
+            flexShrink: 0,
+          }}
+        />
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 600,
+            fontStyle: isGhost ? 'italic' : 'normal',
+            color: isGhost ? 'text.secondary' : 'text.primary',
+            flex: 1,
+          }}
+        >
+          {phaseLabel}
+        </Typography>
         {isEliminated && (
-          <Typography component="span" color="error.main" sx={{ ml: 1, fontWeight: 600 }}>
-            ❌ Eliminated
+          <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', color: eliminationColor }}>
+            Eliminated
           </Typography>
         )}
-      </Typography>
-
-      {/* Race cards grid */}
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: 'repeat(3, 1fr)',
-            sm: 'repeat(4, 1fr)',
-            md: 'repeat(5, 1fr)',
-          },
-          gap: 1,
-        }}
-      >
-        {races.map((race) => (
-          <RaceCard key={race.round} race={race} driverId={driverId} isGhost={isGhost} />
-        ))}
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 600,
+            color: isEliminated ? eliminationColor : 'text.secondary',
+            opacity: isGhost ? 0.7 : 1,
+            fontStyle: isGhost ? 'italic' : 'normal',
+          }}
+        >
+          {points} pts
+        </Typography>
       </Box>
 
-      {/* Ghost total */}
-      {isGhost && points > 0 && (
-        <Typography
-          variant="caption"
-          sx={{ fontStyle: 'italic', color: 'text.secondary', mt: 1, display: 'block' }}
+      {/* Collapsible race cards grid */}
+      <Collapse in={expanded} timeout="auto">
+        <Box
+          sx={{
+            p: 1.5,
+            bgcolor: 'background.paper',
+          }}
         >
-          Would have scored: ({points} pts)
-        </Typography>
-      )}
-    </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: 'repeat(3, 1fr)',
+                sm: 'repeat(4, 1fr)',
+                md: 'repeat(5, 1fr)',
+              },
+              gap: 1,
+            }}
+          >
+            {races.map((race) => (
+              <RaceCard key={race.round} race={race} driverId={driverId} isGhost={isGhost} />
+            ))}
+          </Box>
+
+          {/* Ghost total */}
+          {isGhost && points > 0 && (
+            <Typography
+              variant="caption"
+              sx={{ fontStyle: 'italic', color: 'text.secondary', mt: 1, display: 'block' }}
+            >
+              Would have scored: {points} pts
+            </Typography>
+          )}
+        </Box>
+      </Collapse>
+    </Paper>
   );
 }

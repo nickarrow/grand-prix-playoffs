@@ -4,21 +4,25 @@ import { Box } from '@mui/material';
 
 import type { Race, PlayoffState } from 'src/types';
 import { calculateTotalPoints } from 'src/engine';
+import { getTeamColor } from 'src/constants';
 
 import { PhaseSection } from './PhaseSection';
 
 interface DriverDetailProps {
   driverId: string;
+  constructorId: string;
   playoffState: PlayoffState;
   allRaces: Race[];
 }
 
 export function DriverDetail({
   driverId,
+  constructorId,
   playoffState,
   allRaces,
 }: DriverDetailProps): React.ReactElement {
   const { regularSeasonRaces: regSeasonCount, playoffStartRace, rounds } = playoffState;
+  const teamColor = getTeamColor(constructorId).primary;
 
   const regularSeasonRaces = allRaces.filter((r) => r.round <= regSeasonCount);
   const regularSeasonPoints = calculateTotalPoints(driverId, regularSeasonRaces);
@@ -63,6 +67,7 @@ export function DriverDetail({
         races={regularSeasonRaces}
         driverId={driverId}
         points={regularSeasonPoints}
+        accentColor={teamColor}
       />
 
       {/* Playoff Rounds */}
@@ -91,6 +96,7 @@ export function DriverDetail({
                 driverId={driverId}
                 points={roundPoints}
                 isEliminated={wasEliminated}
+                accentColor={teamColor}
               />
             );
           })}
@@ -106,6 +112,7 @@ export function DriverDetail({
           points={ghostPoints}
           isGhost
           label={didQualify ? 'After Elimination' : 'Playoffs (Did not qualify)'}
+          accentColor={teamColor}
         />
       )}
     </Box>

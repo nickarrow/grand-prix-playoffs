@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { Box, Collapse, TableCell, TableRow, Typography } from '@mui/material';
-import { Trophy } from 'lucide-react';
+import { ChevronRight, Trophy } from 'lucide-react';
 
 import { useTheme } from '@mui/material/styles';
 
@@ -13,6 +13,8 @@ import { PODIUM_COLORS, ELIMINATION_COLOR } from 'src/theme/palette';
 import { getPlayoffRoundPoints, wasEliminatedInRound } from 'src/utils';
 
 import { DriverDetail } from './DriverDetail';
+
+const CHEVRON_ICON_SIZE = 14;
 
 interface DriverRowProps {
   driver: Driver;
@@ -84,16 +86,17 @@ export function DriverRow({
       );
     }
     if (eliminated) {
+      const eliminationColor = mode === 'dark' ? ELIMINATION_COLOR.dark : ELIMINATION_COLOR.light;
       return (
         <Typography
           variant="body2"
           sx={{
             textAlign: 'right',
-            color: mode === 'dark' ? ELIMINATION_COLOR.dark : ELIMINATION_COLOR.light,
+            color: eliminationColor,
             fontWeight: 700,
           }}
         >
-          ✗
+          {points}
         </Typography>
       );
     }
@@ -117,7 +120,7 @@ export function DriverRow({
         }}
       >
         {/* Position */}
-        <TableCell sx={{ width: 36, p: 1 }}>
+        <TableCell sx={{ width: 36, p: 1 }} align="right">
           <Typography variant="body2" fontWeight={600}>
             {position}
           </Typography>
@@ -168,6 +171,15 @@ export function DriverRow({
                 color={mode === 'dark' ? PODIUM_COLORS.bronze.dark : PODIUM_COLORS.bronze.light}
               />
             )}
+            <ChevronRight
+              size={CHEVRON_ICON_SIZE}
+              style={{
+                transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease',
+                opacity: 0.5,
+                flexShrink: 0,
+              }}
+            />
           </Box>
         </TableCell>
 
@@ -206,6 +218,7 @@ export function DriverRow({
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <DriverDetail
               driverId={driver.driverId}
+              constructorId={driver.constructorId}
               playoffState={playoffState}
               allRaces={allRaces}
             />
