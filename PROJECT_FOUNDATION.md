@@ -363,15 +363,36 @@ The app auto-detects the current season state by comparing today's date against 
 
 > Go live
 
-- [ ] Set up Cloudflare Pages project
-- [ ] Configure GitHub integration for auto-deploy
-- [ ] Set up grandprixplayoffs.com domain
-- [ ] Configure SSL and DNS
-- [ ] Enable Cloudflare Web Analytics
-- [ ] Final production testing
-- [ ] Create fallback JSON data for 2025 season
-- [ ] Write deployment documentation
-- [ ] Launch! 🏁
+- [x] Set up Cloudflare Pages project
+- [x] Configure GitHub integration for auto-deploy
+- [x] Set up grandprixplayoffs.com domain
+- [x] Configure SSL and DNS
+- [x] Enable Cloudflare Web Analytics (RUM enabled with auto-injection)
+- [x] Final production testing
+- [x] Create fallback JSON data for 2025 season - _Already existed from Phase 2_
+- [x] Write deployment documentation
+- [x] Launch! 🏁
+
+**Additional Phase 5 work completed:**
+
+- [x] Gold trophy favicon (matches standings table champion icon)
+- [x] SEO meta tags (title, description, Open Graph, Twitter cards)
+- [x] Theme color meta tag (#e10600 racing red)
+- [x] SPA routing via `_redirects` file for Cloudflare Pages
+- [x] Removed unused Vite favicon
+- [x] Deployment guide created (`docs/DEPLOYMENT.md`)
+
+**Deployment details:**
+
+- Cloudflare Pages handles build and deploy automatically on push to `main`
+- No GitHub Actions workflow needed (Cloudflare's built-in GitHub integration)
+- Preview deployments created for pull requests
+- Web Analytics auto-injected (no manual script needed)
+
+**Live URLs:**
+
+- Production: https://grandprixplayoffs.com
+- Pages URL: https://grand-prix-playoffs.pages.dev
 
 ---
 
