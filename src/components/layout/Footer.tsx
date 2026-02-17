@@ -15,12 +15,12 @@ export function Footer(): React.ReactElement {
     >
       <Container maxWidth="lg">
         <Typography variant="body2" color="text.secondary" align="center">
-          © {currentYear} Grand Prix Playoffs. An independent fan project.
+          © {currentYear} Grand Prix Playoffs. An independent fan-made project.
         </Typography>
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
           Not affiliated with Formula One Group, FIA, or Formula 1.{' '}
           <MuiLink
-            href="https://github.com/yourusername/grand-prix-playoffs"
+            href="https://github.com/nickarrow/grand-prix-playoffs"
             target="_blank"
             rel="noopener noreferrer"
             color="primary"

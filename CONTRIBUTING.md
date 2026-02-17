@@ -7,7 +7,8 @@ Thank you for your interest in contributing to Grand Prix Playoffs! This documen
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/grand-prix-playoffs.git`
 3. Install dependencies: `npm install`
-4. Create a branch: `git checkout -b feature/your-feature-name`
+4. Copy `.env.example` to `.env.local` (if needed for API overrides)
+5. Create a branch: `git checkout -b feature/your-feature-name`
 
 ## Development Setup
 
@@ -26,7 +27,12 @@ npm run lint
 
 # Format code
 npm run format
+
+# Update season data from API
+npm run update-data
 ```
+
+Note: Husky pre-commit hooks run automatically on commit (lint + format staged files).
 
 ## Code Standards
 
@@ -36,6 +42,28 @@ Please follow the development standards outlined in `.kiro/steering/dev-standard
 - **Components**: Functional components only, one per file, under 200 lines
 - **Styling**: Use MUI's `sx` prop with theme values, mobile-first approach
 - **Constants**: No magic numbers - define in `src/constants/`
+
+## Testing
+
+The playoff calculation engine has 31 unit tests covering:
+
+- Points calculation (race, sprint, pole, fastest lap)
+- Standings and tiebreaker logic
+- Playoff elimination mechanics
+- Season status detection
+- Edge cases (ties, DNFs, incomplete seasons)
+
+Run tests with `npm test`. Add tests for any new engine logic.
+
+## Data Updates
+
+Season data is cached in `data/*.json` for instant loads. To refresh:
+
+```bash
+npm run update-data
+```
+
+GitHub Actions automatically updates data weekly during active seasons.
 
 ## Commit Messages
 

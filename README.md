@@ -2,21 +2,38 @@
 
 > Reimagining the Formula 1 Drivers' Championship as a true elimination battle.
 
+**Live at [grandprixplayoffs.com](https://grandprixplayoffs.com)**
+
 Grand Prix Playoffs is an independent, fan-made web application that restructures the F1 World Drivers' Championship into a playoff format. Using official Grand Prix results, the season culminates in a winner-take-all final race among four drivers.
+
+## How It Works
+
+The last 7 races of the F1 season become a playoff:
+
+| Phase          | Races           | Drivers | Outcome             |
+| -------------- | --------------- | ------- | ------------------- |
+| Regular Season | 1 through (N-7) | All     | Top 10 qualify      |
+| Round 1        | 2 races         | 10 → 8  | Bottom 2 eliminated |
+| Round 2        | 2 races         | 8 → 6   | Bottom 2 eliminated |
+| Round 3        | 2 races         | 6 → 4   | Bottom 2 eliminated |
+| Final          | 1 race          | 4       | Winner takes title  |
+
+Points reset at the start of each playoff round. Standard F1 points apply (race, sprint, pole, fastest lap).
 
 ## Features
 
-- **Playoff Format**: Top 10 drivers advance, elimination rounds narrow to 4 finalists
-- **Live Data**: Automatic race results via F1 APIs
-- **Season Tracking**: Follow 2025 (historical) and 2026 (live) seasons
+- **Playoff Standings**: See who's advancing, eliminated, or crowned champion
+- **Instant Loads**: Pre-cached race data for fast performance
+- **Live Updates**: GitHub Actions refreshes data weekly during active seasons
 - **Mobile-First**: Responsive design for all devices
 - **Dark/Light Mode**: Toggle between themes
+- **Accessible**: WCAG AA color contrast compliance
 
 ## Tech Stack
 
-- React 18 + TypeScript
-- Material UI
-- TanStack Query
+- React 19 + TypeScript (strict mode)
+- Material UI v7
+- TanStack Query v5
 - Vite
 - Cloudflare Pages
 
@@ -29,25 +46,32 @@ npm install
 # Start development server
 npm run dev
 
-# Run tests
+# Run tests (31 tests covering playoff engine)
 npm test
 
 # Build for production
 npm run build
+
+# Update season data from API
+npm run update-data
 ```
 
 ## Project Structure
 
 ```
 src/
-├── components/     # UI components
-├── pages/          # Route pages
+├── components/     # UI components (standings, layout)
+├── pages/          # Route pages (Home, Season, About)
 ├── engine/         # Playoff calculation logic
-├── services/       # API clients
-├── store/          # Zustand state
-├── theme/          # MUI theme
-├── constants/      # Configuration
-└── types/          # TypeScript types
+├── services/       # API clients + static data loader
+├── hooks/          # Custom React hooks
+├── store/          # Zustand state (theme)
+├── theme/          # MUI theme + color palette
+├── constants/      # Points, playoffs, config
+└── types/          # TypeScript interfaces
+data/
+├── 2025.json       # Cached 2025 season data
+└── 2026.json       # Cached 2026 season data
 ```
 
 ## Contributing
