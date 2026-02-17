@@ -76,7 +76,7 @@ export function PlayoffExplainer({ compact = false }: PlayoffExplainerProps): Re
           <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
             This is an alternative championship using real F1 results. Top {PLAYOFF_QUALIFIERS}{' '}
             drivers advance to playoffs, {ELIMINATIONS_PER_ROUND} are eliminated each round, and the
-            final race decides the champion.{' '}
+            final race crowns the Fan Champion.{' '}
             <Button
               component={RouterLink}
               to="/about"
@@ -118,8 +118,8 @@ export function PlayoffExplainer({ compact = false }: PlayoffExplainerProps): Re
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.6 }}>
             An alternative F1 championship format using real race results. The last {PLAYOFF_RACES}{' '}
             races become playoffs: top {PLAYOFF_QUALIFIERS} drivers advance,{' '}
-            {ELIMINATIONS_PER_ROUND} are eliminated each round, and the final race crowns a
-            winner-take-all champion.
+            {ELIMINATIONS_PER_ROUND} are eliminated each round, and the final race crowns the Grand
+            Prix Playoffs Fan Champion.
           </Typography>
           <Button
             component={RouterLink}

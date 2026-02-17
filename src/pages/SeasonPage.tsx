@@ -1,13 +1,19 @@
 import { Box, Container, Typography, CircularProgress, Alert } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Trophy } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 import { usePlayoffData } from 'src/hooks';
 import { StandingsTable } from 'src/components/standings';
 import { PlayoffExplainer } from 'src/components/common';
+import { TROPHY_ICON_SIZE, getTeamColor } from 'src/constants';
+import { PODIUM_COLORS } from 'src/theme/palette';
 
 export function SeasonPage(): React.ReactElement {
   const { year } = useParams<{ year: string }>();
   const seasonYear = parseInt(year ?? '2025', 10);
+  const theme = useTheme();
+  const mode = theme.palette.mode;
 
   const { playoffState, races, isLoading, error } = usePlayoffData(seasonYear);
 
@@ -75,13 +81,30 @@ export function SeasonPage(): React.ReactElement {
     const currentRound = rounds.find((r) => r.raceNumbers.some((rn) => rn > completedRaces));
     if (currentRound) {
       if (currentRound.round === 4) {
-        return `🏁 Championship Final • Race ${completedRaces} of ${totalRaces}`;
+        return `Championship Final • Race ${completedRaces} of ${totalRaces}`;
       }
-      return `🏁 Playoff Round ${currentRound.round} • Race ${completedRaces} of ${totalRaces}`;
+      return `Playoff Round ${currentRound.round} • Race ${completedRaces} of ${totalRaces}`;
     }
 
-    return `🏁 Playoffs • Race ${completedRaces} of ${totalRaces}`;
+    return `Playoffs • Race ${completedRaces} of ${totalRaces}`;
   };
+
+  // Get champion info for completed seasons
+  const getChampionInfo = (): { code: string; constructorId: string } | null => {
+    if (playoffState.status !== 'completed' || !playoffState.champion) {
+      return null;
+    }
+    const finalRound = playoffState.rounds[playoffState.rounds.length - 1];
+    const championStanding = finalRound?.standings.find(
+      (s) => s.driver.driverId === playoffState.champion
+    );
+    return championStanding
+      ? { code: championStanding.driver.code, constructorId: championStanding.driver.constructorId }
+      : null;
+  };
+
+  const championInfo = getChampionInfo();
+  const teamColor = championInfo ? getTeamColor(championInfo.constructorId).primary : null;
 
   return (
     <Container maxWidth="lg">
@@ -92,9 +115,41 @@ export function SeasonPage(): React.ReactElement {
 
         <PlayoffExplainer compact />
 
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          {getStatusText()}
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+            mb: 3,
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            {getStatusText()}
+          </Typography>
+          {championInfo && (
+            <>
+              <Box
+                sx={{
+                  width: 3,
+                  height: 16,
+                  bgcolor: teamColor,
+                  borderRadius: 1,
+                  flexShrink: 0,
+                }}
+              />
+              <Typography variant="body2" color="text.secondary">
+                {championInfo.code}
+              </Typography>
+              <Trophy
+                size={TROPHY_ICON_SIZE}
+                color={mode === 'dark' ? PODIUM_COLORS.gold.dark : PODIUM_COLORS.gold.light}
+              />
+              <Typography variant="body2" color="text.secondary">
+                Fan Champion
+              </Typography>
+            </>
+          )}
+        </Box>
 
         <StandingsTable playoffState={playoffState} allRaces={races} />
       </Box>
