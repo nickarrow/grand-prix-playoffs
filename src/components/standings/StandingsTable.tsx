@@ -14,6 +14,7 @@ import {
 
 import type { PlayoffState, Race, DriverStanding } from 'src/types';
 import { PLAYOFF_QUALIFIERS } from 'src/constants';
+import { getEliminationRound, getPlayoffRoundPoints } from 'src/utils';
 
 import { DriverRow } from './DriverRow';
 
@@ -22,23 +23,10 @@ interface StandingsTableProps {
   allRaces: Race[];
 }
 
-// Get elimination round for a driver (0 = champion/finalist, 1-3 = eliminated in that round, -1 = didn't qualify)
-function getEliminationRound(driverId: string, playoffState: PlayoffState): number {
-  if (!playoffState.qualifiedDrivers.includes(driverId)) return -1;
-
-  for (const round of playoffState.rounds) {
-    if (round.eliminated.includes(driverId)) return round.round;
-  }
-
-  return 0; // Made it to final or still advancing
-}
-
-// Get points for a specific round
+// Get points for a specific round (wrapper for sorting)
 function getRoundPoints(driverId: string, roundNum: number, playoffState: PlayoffState): number {
   const round = playoffState.rounds.find((r) => r.round === roundNum);
-  if (!round) return 0;
-  const standing = round.standings.find((s) => s.driver.driverId === driverId);
-  return standing?.points ?? 0;
+  return getPlayoffRoundPoints(round, driverId) ?? 0;
 }
 
 // Sort qualified drivers by playoff progression

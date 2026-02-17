@@ -7,9 +7,10 @@ import { Trophy } from 'lucide-react';
 
 import { useTheme } from '@mui/material/styles';
 
-import type { Driver, PlayoffState, PlayoffRound, Race } from 'src/types';
-import { getTeamColor, PODIUM_POSITIONS } from 'src/constants';
+import type { Driver, PlayoffState, Race } from 'src/types';
+import { getTeamColor, PODIUM_POSITIONS, TROPHY_ICON_SIZE } from 'src/constants';
 import { PODIUM_COLORS, ELIMINATION_COLOR } from 'src/theme/palette';
+import { getPlayoffRoundPoints, wasEliminatedInRound } from 'src/utils';
 
 import { DriverDetail } from './DriverDetail';
 
@@ -19,16 +20,6 @@ interface DriverRowProps {
   regularSeasonPoints: number;
   playoffState: PlayoffState;
   allRaces: Race[];
-}
-
-function getRoundPoints(round: PlayoffRound | undefined, driverId: string): number | null {
-  if (!round) return null;
-  const standing = round.standings.find((s) => s.driver.driverId === driverId);
-  return standing?.points ?? null;
-}
-
-function wasEliminatedIn(round: PlayoffRound | undefined, driverId: string): boolean {
-  return round?.eliminated.includes(driverId) ?? false;
 }
 
 export function DriverRow({
@@ -52,28 +43,28 @@ export function DriverRow({
   const round3 = rounds.find((r) => r.round === 3);
   const finalRound = rounds.find((r) => r.round === 4);
 
-  const r1Points = didQualify ? getRoundPoints(round1, driver.driverId) : null;
+  const r1Points = didQualify ? getPlayoffRoundPoints(round1, driver.driverId) : null;
   const r2Points =
-    didQualify && !wasEliminatedIn(round1, driver.driverId)
-      ? getRoundPoints(round2, driver.driverId)
+    didQualify && !wasEliminatedInRound(round1, driver.driverId)
+      ? getPlayoffRoundPoints(round2, driver.driverId)
       : null;
   const r3Points =
     didQualify &&
-    !wasEliminatedIn(round1, driver.driverId) &&
-    !wasEliminatedIn(round2, driver.driverId)
-      ? getRoundPoints(round3, driver.driverId)
+    !wasEliminatedInRound(round1, driver.driverId) &&
+    !wasEliminatedInRound(round2, driver.driverId)
+      ? getPlayoffRoundPoints(round3, driver.driverId)
       : null;
   const finalPoints =
     didQualify &&
-    !wasEliminatedIn(round1, driver.driverId) &&
-    !wasEliminatedIn(round2, driver.driverId) &&
-    !wasEliminatedIn(round3, driver.driverId)
-      ? getRoundPoints(finalRound, driver.driverId)
+    !wasEliminatedInRound(round1, driver.driverId) &&
+    !wasEliminatedInRound(round2, driver.driverId) &&
+    !wasEliminatedInRound(round3, driver.driverId)
+      ? getPlayoffRoundPoints(finalRound, driver.driverId)
       : null;
 
-  const eliminatedR1 = wasEliminatedIn(round1, driver.driverId);
-  const eliminatedR2 = wasEliminatedIn(round2, driver.driverId);
-  const eliminatedR3 = wasEliminatedIn(round3, driver.driverId);
+  const eliminatedR1 = wasEliminatedInRound(round1, driver.driverId);
+  const eliminatedR2 = wasEliminatedInRound(round2, driver.driverId);
+  const eliminatedR3 = wasEliminatedInRound(round3, driver.driverId);
   const isEliminated = eliminatedR1 || eliminatedR2 || eliminatedR3;
 
   // Only show podium trophies for completed seasons
@@ -161,19 +152,19 @@ export function DriverRow({
             </Typography>
             {isSeasonComplete && isChampion && (
               <Trophy
-                size={14}
+                size={TROPHY_ICON_SIZE}
                 color={mode === 'dark' ? PODIUM_COLORS.gold.dark : PODIUM_COLORS.gold.light}
               />
             )}
             {position === 2 && isPodium && (
               <Trophy
-                size={14}
+                size={TROPHY_ICON_SIZE}
                 color={mode === 'dark' ? PODIUM_COLORS.silver.dark : PODIUM_COLORS.silver.light}
               />
             )}
             {position === 3 && isPodium && (
               <Trophy
-                size={14}
+                size={TROPHY_ICON_SIZE}
                 color={mode === 'dark' ? PODIUM_COLORS.bronze.dark : PODIUM_COLORS.bronze.light}
               />
             )}

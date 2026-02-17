@@ -3,7 +3,7 @@
 import { Box } from '@mui/material';
 
 import type { Race, PlayoffState } from 'src/types';
-import { POLE_POSITION } from 'src/constants';
+import { calculateTotalPoints } from 'src/engine';
 
 import { PhaseSection } from './PhaseSection';
 
@@ -11,21 +11,6 @@ interface DriverDetailProps {
   driverId: string;
   playoffState: PlayoffState;
   allRaces: Race[];
-}
-
-function calculateRacePoints(races: Race[], driverId: string): number {
-  return races.reduce((total, race) => {
-    const result = race.results.find((r) => r.driverId === driverId);
-    const sprint = race.sprint?.find((s) => s.driverId === driverId);
-    const qualifying = race.qualifying.find((q) => q.driverId === driverId);
-
-    let points = result?.points ?? 0;
-    points += sprint?.points ?? 0;
-    points += qualifying?.position === POLE_POSITION ? 1 : 0;
-    points += result?.fastestLap ? 1 : 0;
-
-    return total + points;
-  }, 0);
 }
 
 export function DriverDetail({
@@ -36,7 +21,7 @@ export function DriverDetail({
   const { regularSeasonRaces: regSeasonCount, playoffStartRace, rounds } = playoffState;
 
   const regularSeasonRaces = allRaces.filter((r) => r.round <= regSeasonCount);
-  const regularSeasonPoints = calculateRacePoints(regularSeasonRaces, driverId);
+  const regularSeasonPoints = calculateTotalPoints(driverId, regularSeasonRaces);
 
   let eliminatedInRound: number | null = null;
   for (const round of rounds) {
@@ -68,7 +53,7 @@ export function DriverDetail({
   };
 
   const ghostRaces = getGhostRaces();
-  const ghostPoints = calculateRacePoints(ghostRaces, driverId);
+  const ghostPoints = calculateTotalPoints(driverId, ghostRaces);
 
   return (
     <Box sx={{ py: 2, px: { xs: 2, sm: 4 }, bgcolor: 'action.hover' }}>

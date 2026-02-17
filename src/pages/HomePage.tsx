@@ -36,14 +36,7 @@ export function HomePage(): React.ReactElement {
           >
             F1 titles are often decided before the final race. Grand Prix Playoffs reimagines the
             championship as a playoff where the top 10 drivers from the regular season advance to a
-            7-race playoff until only four remain for a winner-take-all finale.
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ maxWidth: 600, mx: { md: 'auto' }, mb: 3, lineHeight: 1.7 }}
-          >
-            Track the standings and see who wins the Grand Prix Playoffs Championship!
+            7-race playoff until only 4 drivers remain for a winner-take-all finale.
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, justifyContent: { xs: 'flex-start', md: 'center' } }}>
             <Button

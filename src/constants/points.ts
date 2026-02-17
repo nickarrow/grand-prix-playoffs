@@ -22,3 +22,6 @@ export const PODIUM_POSITIONS = 3;
 
 // Pole position
 export const POLE_POSITION = 1;
+
+// UI Constants
+export const TROPHY_ICON_SIZE = 14;
