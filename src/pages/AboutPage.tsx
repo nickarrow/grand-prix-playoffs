@@ -65,7 +65,7 @@ export function AboutPage(): React.ReactElement {
               Regular Season
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Top {PLAYOFF_QUALIFIERS} qualify
+              Top {PLAYOFF_QUALIFIERS} advance to playoffs
             </Typography>
           </Box>
           <Box
