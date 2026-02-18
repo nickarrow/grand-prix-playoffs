@@ -48,6 +48,7 @@ describe('compareTiebreaker', () => {
     const a: DriverStanding = {
       driver: createDriver('a'),
       points: 100,
+      officialPoints: 0,
       wins: 0,
       podiums: 0,
       position: 0,
@@ -56,6 +57,7 @@ describe('compareTiebreaker', () => {
     const b: DriverStanding = {
       driver: createDriver('b'),
       points: 50,
+      officialPoints: 0,
       wins: 0,
       podiums: 0,
       position: 0,
@@ -69,6 +71,7 @@ describe('compareTiebreaker', () => {
     const a: DriverStanding = {
       driver: createDriver('a'),
       points: 100,
+      officialPoints: 0,
       wins: 2,
       podiums: 2,
       position: 0,
@@ -77,6 +80,7 @@ describe('compareTiebreaker', () => {
     const b: DriverStanding = {
       driver: createDriver('b'),
       points: 100,
+      officialPoints: 0,
       wins: 3,
       podiums: 3,
       position: 0,
@@ -90,6 +94,7 @@ describe('compareTiebreaker', () => {
     const a: DriverStanding = {
       driver: createDriver('a'),
       points: 100,
+      officialPoints: 0,
       wins: 2,
       podiums: 4,
       position: 0,
@@ -98,6 +103,7 @@ describe('compareTiebreaker', () => {
     const b: DriverStanding = {
       driver: createDriver('b'),
       points: 100,
+      officialPoints: 0,
       wins: 2,
       podiums: 3,
       position: 0,

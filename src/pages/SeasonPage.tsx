@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { usePlayoffData } from 'src/hooks';
 import { StandingsTable } from 'src/components/standings';
 import { PlayoffExplainer } from 'src/components/common';
-import { TROPHY_ICON_SIZE, getTeamColor } from 'src/constants';
+import { TROPHY_ICON_SIZE_LARGE, getTeamColor } from 'src/constants';
 import { PODIUM_COLORS } from 'src/theme/palette';
 
 export function SeasonPage(): React.ReactElement {
@@ -121,6 +121,7 @@ export function SeasonPage(): React.ReactElement {
             alignItems: 'center',
             gap: 0.5,
             mb: 3,
+            flexWrap: 'wrap',
           }}
         >
           <Typography variant="body2" color="text.secondary">
@@ -128,25 +129,29 @@ export function SeasonPage(): React.ReactElement {
           </Typography>
           {championInfo && (
             <>
+              <Typography variant="body2" color="text.secondary">
+                •
+              </Typography>
               <Box
                 sx={{
-                  width: 3,
-                  height: 16,
-                  bgcolor: teamColor,
+                  display: 'flex',
+                  alignItems: 'center',
+                  bgcolor: 'action.hover',
                   borderRadius: 1,
-                  flexShrink: 0,
+                  py: 0.25,
+                  px: 1,
+                  borderLeft: 3,
+                  borderColor: teamColor,
                 }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                {championInfo.code}
-              </Typography>
+              >
+                <Typography variant="body2" fontWeight={500}>
+                  {championInfo.code}
+                </Typography>
+              </Box>
               <Trophy
-                size={TROPHY_ICON_SIZE}
+                size={TROPHY_ICON_SIZE_LARGE}
                 color={mode === 'dark' ? PODIUM_COLORS.gold.dark : PODIUM_COLORS.gold.light}
               />
-              <Typography variant="body2" color="text.secondary">
-                Fan Champion
-              </Typography>
             </>
           )}
         </Box>

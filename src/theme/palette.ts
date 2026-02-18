@@ -5,7 +5,7 @@
 export const PODIUM_COLORS = {
   // Gold: Darkened from #FFD700 to pass contrast on dark bg
   gold: {
-    light: '#B8860B', // Dark goldenrod - 4.7:1 on white
+    light: '#C79900', // Dark gold - 3:1 on white
     dark: '#FFD700', // Original gold - works on dark bg with stroke
   },
   // Silver: Darkened for light mode

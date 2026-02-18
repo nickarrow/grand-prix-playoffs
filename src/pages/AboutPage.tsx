@@ -121,7 +121,7 @@ export function AboutPage(): React.ReactElement {
               Final ({PLAYOFF_ROUNDS[3].races} race)
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Winner crowned Grand Prix Playoffs Fan Champion
+              Winner crowned GPP Champion
             </Typography>
           </Box>
         </Box>
