@@ -171,6 +171,35 @@ export function AboutPage(): React.ReactElement {
 
         <Divider sx={{ my: 4 }} />
 
+        {/* Final Standings */}
+        <Typography variant="h5" component="h2" fontWeight={600} gutterBottom>
+          Final Standings
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
+          Eliminated drivers continue racing and accumulating points to determine their final
+          position within their bracket:
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            • <strong>1st–4th:</strong> Final race is winner-take-all, remaining finalists ranked by
+            final race points
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            • <strong>5th–6th:</strong> Ranked by Round 3 + Final points
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            • <strong>7th–8th:</strong> Ranked by Round 2 + Round 3 + Final points
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            • <strong>9th–10th:</strong> Ranked by Round 1 + Round 2 + Round 3 + Final points
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            • <strong>11th+:</strong> Ranked by Regular Season + all Playoff points
+          </Typography>
+        </Box>
+
+        <Divider sx={{ my: 4 }} />
+
         {/* Links */}
         <Typography variant="h5" component="h2" fontWeight={600} gutterBottom>
           Project
