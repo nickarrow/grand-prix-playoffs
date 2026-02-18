@@ -16,6 +16,8 @@ import { getEliminationRound, getPlayoffRoundPoints } from 'src/utils';
 
 import { DriverRow } from './DriverRow';
 
+const F1_COLUMN_WIDTH = 40;
+
 interface StandingsTableProps {
   playoffState: PlayoffState;
   allRaces: Race[];
@@ -175,7 +177,7 @@ function SectionBanner({ label, type }: SectionBannerProps): React.ReactElement 
   return (
     <TableRow>
       <TableCell
-        colSpan={7}
+        colSpan={8}
         sx={{
           p: 0,
           bgcolor: styles.bgcolor,
@@ -265,6 +267,29 @@ export function StandingsTable({
                 Final
               </Typography>
             </TableCell>
+            <TableCell
+              align="center"
+              sx={{
+                py: 1,
+                px: 0.25,
+                borderLeft: 3,
+                borderColor: 'divider',
+                width: F1_COLUMN_WIDTH,
+                minWidth: F1_COLUMN_WIDTH,
+                maxWidth: F1_COLUMN_WIDTH,
+              }}
+            >
+              <Typography
+                variant="caption"
+                fontWeight={600}
+                color="text.secondary"
+                sx={{ lineHeight: 1.1, display: 'block' }}
+              >
+                F1
+                <br />
+                Ofcl
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
 
@@ -278,6 +303,7 @@ export function StandingsTable({
                   driver={standing.driver}
                   position={runningPosition}
                   regularSeasonPoints={standing.points}
+                  officialPoints={standing.officialPoints}
                   playoffState={playoffState}
                   allRaces={allRaces}
                 />

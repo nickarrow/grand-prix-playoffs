@@ -81,6 +81,7 @@ export interface DriverStanding {
   podiums: number;
   position: number;
   positionHistory: number[]; // For tiebreaker: count of 1sts, 2nds, 3rds, etc.
+  officialPoints: number; // Official F1 season points for reference
 }
 
 // Playoff round result

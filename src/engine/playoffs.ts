@@ -84,7 +84,8 @@ function calculatePlayoffRound(
   playoffRound: number,
   qualifiedDrivers: Driver[],
   roundRaces: Race[],
-  totalRaces: number
+  totalRaces: number,
+  allSeasonRaces: Race[]
 ): PlayoffRound {
   const roundConfig = PLAYOFF_ROUNDS[playoffRound - 1];
   if (!roundConfig) {
@@ -104,7 +105,8 @@ function calculatePlayoffRound(
   );
 
   // Calculate standings for this round only (points reset each round)
-  const standings = calculateStandings(qualifiedDrivers, roundRaces, roundRaces);
+  // Pass allSeasonRaces for official F1 points calculation
+  const standings = calculateStandings(qualifiedDrivers, roundRaces, roundRaces, allSeasonRaces);
 
   // Determine eliminated and advancing drivers
   const eliminated: string[] = [];
@@ -143,9 +145,14 @@ export function calculatePlayoffState(races: Race[], calendar: RaceCalendar[]): 
   // Extract all drivers from the season
   const allDrivers = extractDrivers(races);
 
-  // Calculate regular season standings
+  // Calculate regular season standings (pass all races for official F1 points)
   const regularSeasonRaces = getRegularSeasonRaces(races, totalRaces);
-  const regularSeasonStandings = calculateStandings(allDrivers, regularSeasonRaces);
+  const regularSeasonStandings = calculateStandings(
+    allDrivers,
+    regularSeasonRaces,
+    regularSeasonRaces,
+    races
+  );
 
   // Determine qualified drivers (top 10 from regular season)
   const qualifiedDriverIds = regularSeasonStandings
@@ -174,7 +181,13 @@ export function calculatePlayoffState(races: Race[], calendar: RaceCalendar[]): 
     // Check if round is complete
     const isRoundComplete = roundRaces.length >= roundConfig.races;
 
-    const round = calculatePlayoffRound(roundNum, currentQualifiedDrivers, roundRaces, totalRaces);
+    const round = calculatePlayoffRound(
+      roundNum,
+      currentQualifiedDrivers,
+      roundRaces,
+      totalRaces,
+      races
+    );
     rounds.push(round);
 
     // If round is complete, update qualified drivers for next round

@@ -36,6 +36,25 @@ function countPodiums(driverId: string, races: Race[]): number {
   }).length;
 }
 
+// Calculate official F1 points (sum of points from race results)
+function calculateOfficialPoints(driverId: string, races: Race[]): number {
+  let total = 0;
+  for (const race of races) {
+    const result = race.results.find((r) => r.driverId === driverId);
+    if (result) {
+      total += result.points;
+    }
+    // Add sprint points if applicable
+    if (race.sprint) {
+      const sprintResult = race.sprint.find((s) => s.driverId === driverId);
+      if (sprintResult) {
+        total += sprintResult.points;
+      }
+    }
+  }
+  return total;
+}
+
 // Compare two drivers for tiebreaker (returns negative if a wins, positive if b wins)
 export function compareTiebreaker(a: DriverStanding, b: DriverStanding): number {
   // First compare by points
@@ -97,10 +116,12 @@ interface RaceResultWithDriverInfo extends RaceResult {
 export function calculateStandings(
   drivers: Driver[],
   races: Race[],
-  relevantRaces?: Race[] // Optional: only count points from these races
+  relevantRaces?: Race[], // Optional: only count points from these races
+  allSeasonRaces?: Race[] // Optional: all races for official F1 points calculation
 ): DriverStanding[] {
   const racesForPoints = relevantRaces ?? races;
   const racesForHistory = relevantRaces ?? races;
+  const racesForOfficialPoints = allSeasonRaces ?? races;
 
   const standings: DriverStanding[] = drivers.map((driver) => ({
     driver,
@@ -109,6 +130,7 @@ export function calculateStandings(
     podiums: countPodiums(driver.driverId, racesForHistory),
     position: 0, // Will be set after sorting
     positionHistory: buildPositionHistory(driver.driverId, racesForHistory),
+    officialPoints: calculateOfficialPoints(driver.driverId, racesForOfficialPoints),
   }));
 
   // Sort by points, then tiebreaker

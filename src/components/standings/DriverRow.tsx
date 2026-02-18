@@ -3,23 +3,27 @@
 import { useState } from 'react';
 
 import { Box, Collapse, TableCell, TableRow, Typography } from '@mui/material';
-import { ChevronRight, Trophy } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 import { useTheme } from '@mui/material/styles';
 
 import type { Driver, PlayoffState, Race } from 'src/types';
-import { getTeamColor, PODIUM_POSITIONS, TROPHY_ICON_SIZE } from 'src/constants';
-import { PODIUM_COLORS, ELIMINATION_COLOR } from 'src/theme/palette';
+import { getTeamColor } from 'src/constants';
+import { ELIMINATION_COLOR } from 'src/theme/palette';
 import { getPlayoffRoundPoints, wasEliminatedInRound } from 'src/utils';
 
 import { DriverDetail } from './DriverDetail';
 
 const CHEVRON_ICON_SIZE = 14;
+const DRIVER_CODE_WIDTH = 28;
+const DRIVER_NAME_WIDTH = 120;
+const F1_COLUMN_WIDTH = 40;
 
 interface DriverRowProps {
   driver: Driver;
   position: number;
   regularSeasonPoints: number;
+  officialPoints: number;
   playoffState: PlayoffState;
   allRaces: Race[];
 }
@@ -28,6 +32,7 @@ export function DriverRow({
   driver,
   position,
   regularSeasonPoints,
+  officialPoints,
   playoffState,
   allRaces,
 }: DriverRowProps): React.ReactElement {
@@ -67,11 +72,6 @@ export function DriverRow({
   const eliminatedR1 = wasEliminatedInRound(round1, driver.driverId);
   const eliminatedR2 = wasEliminatedInRound(round2, driver.driverId);
   const eliminatedR3 = wasEliminatedInRound(round3, driver.driverId);
-  const isEliminated = eliminatedR1 || eliminatedR2 || eliminatedR3;
-
-  // Only show podium trophies for completed seasons
-  const isSeasonComplete = playoffState.status === 'completed';
-  const isPodium = isSeasonComplete && position <= PODIUM_POSITIONS && didQualify && !isEliminated;
 
   const renderPointsCell = (
     points: number | null,
@@ -142,35 +142,17 @@ export function DriverRow({
             <Typography
               variant="body2"
               fontWeight={500}
-              sx={{ display: { xs: 'block', md: 'none' } }}
+              sx={{ display: { xs: 'block', md: 'none' }, width: DRIVER_CODE_WIDTH }}
             >
               {driver.code}
             </Typography>
             <Typography
               variant="body2"
               fontWeight={500}
-              sx={{ display: { xs: 'none', md: 'block' } }}
+              sx={{ display: { xs: 'none', md: 'block' }, width: DRIVER_NAME_WIDTH }}
             >
               {driver.firstName} {driver.lastName}
             </Typography>
-            {isSeasonComplete && isChampion && (
-              <Trophy
-                size={TROPHY_ICON_SIZE}
-                color={mode === 'dark' ? PODIUM_COLORS.gold.dark : PODIUM_COLORS.gold.light}
-              />
-            )}
-            {position === 2 && isPodium && (
-              <Trophy
-                size={TROPHY_ICON_SIZE}
-                color={mode === 'dark' ? PODIUM_COLORS.silver.dark : PODIUM_COLORS.silver.light}
-              />
-            )}
-            {position === 3 && isPodium && (
-              <Trophy
-                size={TROPHY_ICON_SIZE}
-                color={mode === 'dark' ? PODIUM_COLORS.bronze.dark : PODIUM_COLORS.bronze.light}
-              />
-            )}
             <ChevronRight
               size={CHEVRON_ICON_SIZE}
               style={{
@@ -207,12 +189,34 @@ export function DriverRow({
         <TableCell align="right" sx={{ p: 1 }}>
           {renderPointsCell(finalPoints, false, true)}
         </TableCell>
+
+        {/* Official F1 Points (reference column) */}
+        <TableCell
+          align="center"
+          sx={{
+            py: 1,
+            px: 0.25,
+            borderLeft: 3,
+            borderColor: 'divider',
+            width: F1_COLUMN_WIDTH,
+            minWidth: F1_COLUMN_WIDTH,
+            maxWidth: F1_COLUMN_WIDTH,
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', fontSize: '0.8rem' }}
+          >
+            {officialPoints}
+          </Typography>
+        </TableCell>
       </TableRow>
 
       {/* Expanded detail */}
       <TableRow>
         <TableCell
-          colSpan={7}
+          colSpan={8}
           sx={{ p: 0, borderBottom: expanded ? 1 : 0, borderColor: 'divider' }}
         >
           <Collapse in={expanded} timeout="auto" unmountOnExit>
