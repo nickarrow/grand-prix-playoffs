@@ -78,9 +78,10 @@ export function DriverRow({
     eliminated: boolean,
     isFinal: boolean = false
   ): React.ReactNode => {
+    const textAlign = isFinal ? 'center' : 'right';
     if (points === null) {
       return (
-        <Typography variant="body2" color="text.disabled" sx={{ textAlign: 'right' }}>
+        <Typography variant="body2" color="text.disabled" sx={{ textAlign }}>
           -
         </Typography>
       );
@@ -91,7 +92,7 @@ export function DriverRow({
         <Typography
           variant="body2"
           sx={{
-            textAlign: 'right',
+            textAlign,
             color: eliminationColor,
             fontWeight: 700,
           }}
@@ -101,7 +102,7 @@ export function DriverRow({
       );
     }
     return (
-      <Typography variant="body2" fontWeight={isFinal && isChampion ? 700 : 400}>
+      <Typography variant="body2" fontWeight={isFinal && isChampion ? 700 : 400} sx={{ textAlign }}>
         {points}
       </Typography>
     );
@@ -186,7 +187,7 @@ export function DriverRow({
         </TableCell>
 
         {/* Final */}
-        <TableCell align="right" sx={{ p: 1 }}>
+        <TableCell align="center" sx={{ p: 1 }}>
           {renderPointsCell(finalPoints, false, true)}
         </TableCell>
 

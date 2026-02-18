@@ -262,7 +262,7 @@ export function StandingsTable({
                 R3
               </Typography>
             </TableCell>
-            <TableCell align="right" sx={{ p: 1 }}>
+            <TableCell align="center" sx={{ p: 1 }}>
               <Typography variant="caption" fontWeight={600}>
                 Final
               </Typography>

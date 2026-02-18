@@ -111,7 +111,7 @@ export function DriverDetail({
           driverId={driverId}
           points={ghostPoints}
           isGhost
-          label={didQualify ? 'After Elimination' : 'Playoffs (Did not qualify)'}
+          label={didQualify ? 'After Elimination' : 'Playoffs (Did not advance)'}
           accentColor={teamColor}
         />
       )}
