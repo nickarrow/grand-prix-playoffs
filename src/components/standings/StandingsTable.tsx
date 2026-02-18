@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 
 import type { PlayoffState, Race, DriverStanding } from 'src/types';
-import { getEliminationRound, getPlayoffRoundPoints } from 'src/utils';
+import { getEliminationRound, getBracketPoints } from 'src/utils';
 
 import { DriverRow } from './DriverRow';
 
@@ -23,13 +23,7 @@ interface StandingsTableProps {
   allRaces: Race[];
 }
 
-// Get points for a specific round (wrapper for sorting)
-function getRoundPoints(driverId: string, roundNum: number, playoffState: PlayoffState): number {
-  const round = playoffState.rounds.find((r) => r.round === roundNum);
-  return getPlayoffRoundPoints(round, driverId) ?? 0;
-}
-
-// Sort qualified drivers by playoff progression
+// Sort qualified drivers by playoff progression and bracket points
 function sortByPlayoffProgression(
   standings: DriverStanding[],
   playoffState: PlayoffState
@@ -49,18 +43,21 @@ function sortByPlayoffProgression(
       return bElimRound - aElimRound;
     }
 
-    // Same elimination round - sort by that round's points (descending)
+    // Same elimination round - sort by cumulative bracket points
+    // Finalists (elimRound 0): sort by final round points only (winner-take-all handled above)
+    // Eliminated drivers: sort by cumulative points from elimination round onward
     if (aElimRound === 0) {
-      return (
-        getRoundPoints(b.driver.driverId, 4, playoffState) -
-        getRoundPoints(a.driver.driverId, 4, playoffState)
-      );
+      // Finalists: sort by final round (round 4) points
+      const aFinalPoints = getBracketPoints(a.driver.driverId, 4, playoffState);
+      const bFinalPoints = getBracketPoints(b.driver.driverId, 4, playoffState);
+      return bFinalPoints - aFinalPoints;
     }
 
-    return (
-      getRoundPoints(b.driver.driverId, aElimRound, playoffState) -
-      getRoundPoints(a.driver.driverId, aElimRound, playoffState)
-    );
+    // Eliminated drivers: sort by cumulative points from their elimination round onward
+    // e.g., R1 eliminated: R1 + R2 + R3 + Final points
+    const aBracketPoints = getBracketPoints(a.driver.driverId, aElimRound, playoffState);
+    const bBracketPoints = getBracketPoints(b.driver.driverId, bElimRound, playoffState);
+    return bBracketPoints - aBracketPoints;
   });
 }
 
@@ -216,7 +213,17 @@ export function StandingsTable({
   );
 
   const sortedQualifiers = sortByPlayoffProgression(qualifiers, playoffState);
-  const groups = groupDriversByElimination(sortedQualifiers, nonQualifiers, playoffState);
+
+  // Sort non-qualifiers by regular season + all playoff points
+  const sortedNonQualifiers = [...nonQualifiers].sort((a, b) => {
+    const aPlayoffPoints = getBracketPoints(a.driver.driverId, 1, playoffState);
+    const bPlayoffPoints = getBracketPoints(b.driver.driverId, 1, playoffState);
+    const aTotal = a.points + aPlayoffPoints;
+    const bTotal = b.points + bPlayoffPoints;
+    return bTotal - aTotal;
+  });
+
+  const groups = groupDriversByElimination(sortedQualifiers, sortedNonQualifiers, playoffState);
 
   let runningPosition = 0;
 

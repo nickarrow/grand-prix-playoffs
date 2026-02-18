@@ -198,4 +198,38 @@ describe('calculatePlayoffState', () => {
     const d1Standing = round2?.standings.find((s) => s.driver.driverId === 'd1');
     expect(d1Standing?.points).toBe(50);
   });
+
+  it('should include all qualified drivers in round standings for bracket tracking', () => {
+    const calendar = createCalendar(24);
+    const races = createFullSeason(21); // Through round 2
+
+    const state = calculatePlayoffState(races, calendar);
+
+    // Round 2 should include all 12 drivers (all who raced), not just the 8 still competing
+    const round2 = state.rounds[1];
+    expect(round2?.standings.length).toBeGreaterThanOrEqual(10);
+
+    // Drivers eliminated in R1 (d9, d10) should still have standings in R2
+    const d9Standing = round2?.standings.find((s) => s.driver.driverId === 'd9');
+    const d10Standing = round2?.standings.find((s) => s.driver.driverId === 'd10');
+    expect(d9Standing).toBeDefined();
+    expect(d10Standing).toBeDefined();
+  });
+
+  it('should include non-qualifiers in round standings for bracket tracking', () => {
+    const calendar = createCalendar(24);
+    const races = createFullSeason(19); // Through round 1
+
+    const state = calculatePlayoffState(races, calendar);
+
+    // Round 1 should include all 12 drivers (10 qualified + 2 non-qualifiers)
+    const round1 = state.rounds[0];
+    expect(round1?.standings).toHaveLength(12);
+
+    // Non-qualifiers (d11, d12) should have standings
+    const d11Standing = round1?.standings.find((s) => s.driver.driverId === 'd11');
+    const d12Standing = round1?.standings.find((s) => s.driver.driverId === 'd12');
+    expect(d11Standing).toBeDefined();
+    expect(d12Standing).toBeDefined();
+  });
 });

@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import type { Driver, PlayoffState, Race } from 'src/types';
 import { getTeamColor } from 'src/constants';
 import { ELIMINATION_COLOR } from 'src/theme/palette';
-import { getPlayoffRoundPoints, wasEliminatedInRound } from 'src/utils';
+import { getPlayoffRoundPoints, getEliminationRound } from 'src/utils';
 
 import { DriverDetail } from './DriverDetail';
 
@@ -45,37 +45,39 @@ export function DriverRow({
   const isChampion = champion === driver.driverId;
   const teamColors = getTeamColor(driver.constructorId);
 
+  // Get elimination round for this driver (-1 = didn't qualify, 0 = finalist, 1-3 = eliminated in that round)
+  const elimRound = getEliminationRound(driver.driverId, playoffState);
+
   const round1 = rounds.find((r) => r.round === 1);
   const round2 = rounds.find((r) => r.round === 2);
   const round3 = rounds.find((r) => r.round === 3);
   const finalRound = rounds.find((r) => r.round === 4);
 
-  const r1Points = didQualify ? getPlayoffRoundPoints(round1, driver.driverId) : null;
-  const r2Points =
-    didQualify && !wasEliminatedInRound(round1, driver.driverId)
-      ? getPlayoffRoundPoints(round2, driver.driverId)
-      : null;
-  const r3Points =
-    didQualify &&
-    !wasEliminatedInRound(round1, driver.driverId) &&
-    !wasEliminatedInRound(round2, driver.driverId)
-      ? getPlayoffRoundPoints(round3, driver.driverId)
-      : null;
-  const finalPoints =
-    didQualify &&
-    !wasEliminatedInRound(round1, driver.driverId) &&
-    !wasEliminatedInRound(round2, driver.driverId) &&
-    !wasEliminatedInRound(round3, driver.driverId)
-      ? getPlayoffRoundPoints(finalRound, driver.driverId)
-      : null;
+  // Get points for each round (includes all drivers for bracket tracking)
+  const r1Points = getPlayoffRoundPoints(round1, driver.driverId);
+  const r2Points = getPlayoffRoundPoints(round2, driver.driverId);
+  const r3Points = getPlayoffRoundPoints(round3, driver.driverId);
+  const finalPoints = getPlayoffRoundPoints(finalRound, driver.driverId);
 
-  const eliminatedR1 = wasEliminatedInRound(round1, driver.driverId);
-  const eliminatedR2 = wasEliminatedInRound(round2, driver.driverId);
-  const eliminatedR3 = wasEliminatedInRound(round3, driver.driverId);
+  // Determine which round the driver was eliminated in (for styling)
+  const eliminatedR1 = elimRound === 1;
+  const eliminatedR2 = elimRound === 2;
+  const eliminatedR3 = elimRound === 3;
+
+  // Non-qualifiers show all playoff points as muted
+  const isNonQualifier = !didQualify;
+
+  // Check if driver was already eliminated before a given round (for muted styling)
+  const wasEliminatedBeforeR1 = isNonQualifier; // Non-qualifiers are "eliminated" before R1
+  const wasEliminatedBeforeR2 = isNonQualifier || elimRound === 1;
+  const wasEliminatedBeforeR3 = isNonQualifier || elimRound === 1 || elimRound === 2;
+  const wasEliminatedBeforeFinal =
+    isNonQualifier || elimRound === 1 || elimRound === 2 || elimRound === 3;
 
   const renderPointsCell = (
     points: number | null,
     eliminated: boolean,
+    isMuted: boolean,
     isFinal: boolean = false
   ): React.ReactNode => {
     const textAlign = isFinal ? 'center' : 'right';
@@ -86,6 +88,15 @@ export function DriverRow({
         </Typography>
       );
     }
+    // Show muted points for rounds after elimination
+    if (isMuted) {
+      return (
+        <Typography variant="body2" color="text.disabled" sx={{ textAlign }}>
+          {points}
+        </Typography>
+      );
+    }
+    // Show elimination color for the round they were eliminated
     if (eliminated) {
       const eliminationColor = mode === 'dark' ? ELIMINATION_COLOR.dark : ELIMINATION_COLOR.light;
       return (
@@ -173,22 +184,22 @@ export function DriverRow({
 
         {/* Round 1 */}
         <TableCell align="right" sx={{ p: 1 }}>
-          {renderPointsCell(r1Points, eliminatedR1)}
+          {renderPointsCell(r1Points, eliminatedR1, wasEliminatedBeforeR1)}
         </TableCell>
 
         {/* Round 2 */}
         <TableCell align="right" sx={{ p: 1 }}>
-          {renderPointsCell(r2Points, eliminatedR2)}
+          {renderPointsCell(r2Points, eliminatedR2, wasEliminatedBeforeR2)}
         </TableCell>
 
         {/* Round 3 */}
         <TableCell align="right" sx={{ p: 1 }}>
-          {renderPointsCell(r3Points, eliminatedR3)}
+          {renderPointsCell(r3Points, eliminatedR3, wasEliminatedBeforeR3)}
         </TableCell>
 
         {/* Final */}
         <TableCell align="center" sx={{ p: 1 }}>
-          {renderPointsCell(finalPoints, false, true)}
+          {renderPointsCell(finalPoints, false, wasEliminatedBeforeFinal, true)}
         </TableCell>
 
         {/* Official F1 Points (reference column) */}

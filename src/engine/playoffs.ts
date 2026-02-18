@@ -80,9 +80,12 @@ export function getPlayoffRoundRaces(
 }
 
 // Calculate a single playoff round
+// allQualifiedDrivers: all drivers who qualified for playoffs (for bracket point tracking)
+// activeDrivers: drivers still competing in this round (for elimination decisions)
 function calculatePlayoffRound(
   playoffRound: number,
-  qualifiedDrivers: Driver[],
+  activeDrivers: Driver[],
+  allQualifiedDrivers: Driver[],
   roundRaces: Race[],
   totalRaces: number,
   allSeasonRaces: Race[]
@@ -104,32 +107,41 @@ function calculatePlayoffRound(
     (_, i) => playoffStartRace + raceOffset + i
   );
 
-  // Calculate standings for this round only (points reset each round)
-  // Pass allSeasonRaces for official F1 points calculation
-  const standings = calculateStandings(qualifiedDrivers, roundRaces, roundRaces, allSeasonRaces);
+  // Calculate standings for ALL qualified drivers (for bracket point tracking)
+  // This allows eliminated drivers to continue accumulating points for bracket ranking
+  const allStandings = calculateStandings(
+    allQualifiedDrivers,
+    roundRaces,
+    roundRaces,
+    allSeasonRaces
+  );
 
-  // Determine eliminated and advancing drivers
+  // Get standings for only active drivers (for elimination decisions)
+  const activeDriverIds = new Set(activeDrivers.map((d) => d.driverId));
+  const activeStandings = allStandings.filter((s) => activeDriverIds.has(s.driver.driverId));
+
+  // Determine eliminated and advancing drivers (based on active drivers only)
   const eliminated: string[] = [];
   const advancing: string[] = [];
 
   if (playoffRound === PLAYOFF_ROUNDS.length) {
     // Championship final - winner takes all
-    if (standings[0]) {
-      advancing.push(standings[0].driver.driverId);
+    if (activeStandings[0]) {
+      advancing.push(activeStandings[0].driver.driverId);
     }
-    standings.slice(1).forEach((s) => eliminated.push(s.driver.driverId));
+    activeStandings.slice(1).forEach((s) => eliminated.push(s.driver.driverId));
   } else {
     // Regular elimination round
     const advancingCount = roundConfig.endDrivers;
 
-    standings.slice(0, advancingCount).forEach((s) => advancing.push(s.driver.driverId));
-    standings.slice(advancingCount).forEach((s) => eliminated.push(s.driver.driverId));
+    activeStandings.slice(0, advancingCount).forEach((s) => advancing.push(s.driver.driverId));
+    activeStandings.slice(advancingCount).forEach((s) => eliminated.push(s.driver.driverId));
   }
 
   return {
     round: playoffRound,
     raceNumbers,
-    standings,
+    standings: allStandings, // Include all qualified drivers for bracket tracking
     eliminated,
     advancing,
   };
@@ -159,12 +171,15 @@ export function calculatePlayoffState(races: Race[], calendar: RaceCalendar[]): 
     .slice(0, PLAYOFF_QUALIFIERS)
     .map((s) => s.driver.driverId);
 
+  // All qualified drivers (for elimination decisions)
+  const allQualifiedDrivers = allDrivers.filter((d) => qualifiedDriverIds.includes(d.driverId));
+
   // Determine season status
   const status = determineSeasonStatus(calendar, completedRaces);
 
   // Calculate playoff rounds
   const rounds: PlayoffRound[] = [];
-  let currentQualifiedDrivers = allDrivers.filter((d) => qualifiedDriverIds.includes(d.driverId));
+  let activeDrivers = [...allQualifiedDrivers]; // Drivers still competing for championship
   let champion: string | null = null;
 
   for (let roundNum = 1; roundNum <= PLAYOFF_ROUNDS.length; roundNum++) {
@@ -183,18 +198,17 @@ export function calculatePlayoffState(races: Race[], calendar: RaceCalendar[]): 
 
     const round = calculatePlayoffRound(
       roundNum,
-      currentQualifiedDrivers,
+      activeDrivers,
+      allDrivers, // Pass ALL drivers for bracket point tracking (including non-qualifiers)
       roundRaces,
       totalRaces,
       races
     );
     rounds.push(round);
 
-    // If round is complete, update qualified drivers for next round
+    // If round is complete, update active drivers for next round
     if (isRoundComplete) {
-      currentQualifiedDrivers = currentQualifiedDrivers.filter((d) =>
-        round.advancing.includes(d.driverId)
-      );
+      activeDrivers = activeDrivers.filter((d) => round.advancing.includes(d.driverId));
 
       // Check for champion (final round complete)
       if (roundNum === PLAYOFF_ROUNDS.length && round.advancing.length > 0) {

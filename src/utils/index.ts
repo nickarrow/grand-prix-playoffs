@@ -28,3 +28,22 @@ export function getPlayoffRoundPoints(
 export function wasEliminatedInRound(round: PlayoffRound | undefined, driverId: string): boolean {
   return round?.eliminated.includes(driverId) ?? false;
 }
+
+// Get cumulative points from a starting round through the end of playoffs
+// Used for ranking within elimination brackets
+export function getBracketPoints(
+  driverId: string,
+  startRound: number,
+  playoffState: PlayoffState
+): number {
+  let total = 0;
+  for (const round of playoffState.rounds) {
+    if (round.round >= startRound) {
+      const points = getPlayoffRoundPoints(round, driverId);
+      if (points !== null) {
+        total += points;
+      }
+    }
+  }
+  return total;
+}
