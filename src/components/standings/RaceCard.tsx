@@ -100,6 +100,7 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
       </Typography>
 
       {/* Points breakdown - only show if there are bonus points */}
+      {/* Order: Sprint (Sat) → Pole (Sat) → Race (Sun) → Fastest Lap (during race) */}
       {hasBonus && (
         <Box
           sx={{
@@ -110,11 +111,6 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
             mt: 0.5,
           }}
         >
-          {points.race > 0 && (
-            <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>
-              R:{points.race}
-            </Typography>
-          )}
           {points.sprint > 0 && (
             <Typography
               variant="caption"
@@ -135,6 +131,11 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
               }}
             >
               P:1
+            </Typography>
+          )}
+          {points.race > 0 && (
+            <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>
+              R:{points.race}
             </Typography>
           )}
           {points.fastestLap > 0 && (

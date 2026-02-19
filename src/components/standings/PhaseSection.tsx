@@ -2,49 +2,68 @@
 
 import { useState } from 'react';
 
-import { Box, Collapse, Paper, Typography } from '@mui/material';
-import { ChevronRight } from 'lucide-react';
+import { Box, Chip, Collapse, Paper, Typography } from '@mui/material';
+import { ChevronRight, Trophy } from 'lucide-react';
 import { useTheme } from '@mui/material/styles';
 
-import type { Race } from 'src/types';
-import { ELIMINATION_COLOR } from 'src/theme/palette';
+import type { Race, PlayoffRound } from 'src/types';
+import { TROPHY_ICON_SIZE, FINAL_ROUND_NUMBER } from 'src/constants';
+import { calculateTotalPoints } from 'src/engine';
+import { ELIMINATION_COLOR, PODIUM_COLORS } from 'src/theme/palette';
 
 import { RaceCard } from './RaceCard';
 
-type PhaseType = 'regular' | 'round1' | 'round2' | 'round3' | 'final' | 'ghost';
+type PhaseType = 'regular' | 'playoffs';
 
 interface PhaseSectionProps {
   type: PhaseType;
   races: Race[];
   driverId: string;
   points: number;
-  isEliminated?: boolean;
-  isGhost?: boolean;
-  label?: string;
   accentColor?: string;
+  // Playoff-specific props
+  didAdvance?: boolean;
+  eliminatedInRound?: number | null;
+  eliminationRaceNumber?: number | null;
+  finalistPosition?: number | null;
+  playoffRounds?: PlayoffRound[];
 }
 
 const CHEVRON_ICON_SIZE = 16;
 const ACCENT_BORDER_WIDTH = 3;
 
-function getPhaseLabel(type: PhaseType, label?: string): string {
-  if (label) return label;
-  switch (type) {
-    case 'regular':
-      return 'Regular Season';
-    case 'round1':
-      return 'Round 1';
-    case 'round2':
-      return 'Round 2';
-    case 'round3':
-      return 'Round 3';
-    case 'final':
-      return 'Championship Final';
-    case 'ghost':
-      return 'After Elimination';
-    default:
-      return '';
+// Finalist positions that get trophies (1st, 2nd, 3rd)
+const GOLD_POSITION = 1;
+const SILVER_POSITION = 2;
+const BRONZE_POSITION = 3;
+
+function getPhaseLabel(type: PhaseType, didAdvance?: boolean): string {
+  if (type === 'regular') return 'Regular Season';
+  if (type === 'playoffs') {
+    if (didAdvance === false) return 'Playoffs (Did not advance)';
+    return 'Playoffs';
   }
+  return '';
+}
+
+// Get trophy color for finalist position
+function getTrophyColor(position: number, mode: 'light' | 'dark'): string | null {
+  switch (position) {
+    case GOLD_POSITION:
+      return mode === 'dark' ? PODIUM_COLORS.gold.dark : PODIUM_COLORS.gold.light;
+    case SILVER_POSITION:
+      return mode === 'dark' ? PODIUM_COLORS.silver.dark : PODIUM_COLORS.silver.light;
+    case BRONZE_POSITION:
+      return mode === 'dark' ? PODIUM_COLORS.bronze.dark : PODIUM_COLORS.bronze.light;
+    default:
+      return null;
+  }
+}
+
+// Get round label
+function getRoundLabel(roundNum: number): string {
+  if (roundNum === FINAL_ROUND_NUMBER) return 'Final';
+  return `R${roundNum}`;
 }
 
 export function PhaseSection({
@@ -52,16 +71,51 @@ export function PhaseSection({
   races,
   driverId,
   points,
-  isEliminated = false,
-  isGhost = false,
-  label,
   accentColor,
+  didAdvance = true,
+  eliminatedInRound = null,
+  eliminationRaceNumber = null,
+  finalistPosition = null,
+  playoffRounds = [],
 }: PhaseSectionProps): React.ReactElement {
   const [expanded, setExpanded] = useState(false);
   const theme = useTheme();
   const mode = theme.palette.mode;
   const eliminationColor = mode === 'dark' ? ELIMINATION_COLOR.dark : ELIMINATION_COLOR.light;
-  const phaseLabel = getPhaseLabel(type, label);
+
+  const phaseLabel = getPhaseLabel(type, didAdvance);
+  const isNonAdvancer = type === 'playoffs' && didAdvance === false;
+  const wasEliminated = eliminatedInRound !== null;
+  const isFinalist = finalistPosition !== null;
+  const trophyColor = isFinalist ? getTrophyColor(finalistPosition, mode) : null;
+
+  // Determine if a race should be shown as "ghost" (post-elimination or non-advancer)
+  const isRaceGhost = (race: Race): boolean => {
+    if (isNonAdvancer) return true;
+    if (eliminationRaceNumber !== null && race.round > eliminationRaceNumber) return true;
+    return false;
+  };
+
+  // Check if an entire round is ghost (all races in it are post-elimination)
+  const isRoundGhost = (roundRaces: Race[]): boolean => {
+    return roundRaces.length > 0 && roundRaces.every((r) => isRaceGhost(r));
+  };
+
+  // Group races by playoff round for playoffs section
+  const getRacesByRound = (): { roundNum: number; races: Race[]; points: number }[] => {
+    if (type !== 'playoffs' || playoffRounds.length === 0) return [];
+
+    return playoffRounds
+      .map((round) => {
+        const roundRaces = races.filter((race) => round.raceNumbers.includes(race.round));
+        const roundPoints = calculateTotalPoints(driverId, roundRaces);
+        return { roundNum: round.round, races: roundRaces, points: roundPoints };
+      })
+      .filter((group) => group.races.length > 0);
+  };
+
+  const racesByRound = getRacesByRound();
+  const showRoundByRound = type === 'playoffs' && racesByRound.length > 0;
 
   return (
     <Paper
@@ -70,7 +124,8 @@ export function PhaseSection({
         mb: 1,
         overflow: 'hidden',
         borderLeft: accentColor ? `${ACCENT_BORDER_WIDTH}px solid ${accentColor}` : undefined,
-        opacity: isGhost ? 0.7 : 1,
+        opacity: isNonAdvancer ? 0.7 : 1,
+        borderStyle: isNonAdvancer ? 'dashed' : 'solid',
       }}
     >
       {/* Phase header - clickable to expand/collapse */}
@@ -83,7 +138,6 @@ export function PhaseSection({
           cursor: 'pointer',
           p: 1.5,
           bgcolor: 'background.paper',
-          // Only apply hover on devices that support it (not touch)
           '@media (hover: hover)': {
             '&:hover': { bgcolor: 'action.hover' },
           },
@@ -94,7 +148,7 @@ export function PhaseSection({
           style={{
             transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
-            opacity: isGhost ? 0.5 : 0.7,
+            opacity: isNonAdvancer ? 0.5 : 0.7,
             flexShrink: 0,
           }}
         />
@@ -102,63 +156,156 @@ export function PhaseSection({
           variant="body2"
           sx={{
             fontWeight: 600,
-            fontStyle: isGhost ? 'italic' : 'normal',
-            color: isGhost ? 'text.secondary' : 'text.primary',
+            fontStyle: isNonAdvancer ? 'italic' : 'normal',
+            color: isNonAdvancer ? 'text.secondary' : 'text.primary',
             flex: 1,
           }}
         >
           {phaseLabel}
         </Typography>
-        {isEliminated && (
-          <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', color: eliminationColor }}>
-            Eliminated
-          </Typography>
+
+        {/* Elimination chip for playoff section */}
+        {wasEliminated && (
+          <Chip
+            label={`Elim R${eliminatedInRound}`}
+            size="small"
+            sx={{
+              height: 20,
+              fontSize: '0.7rem',
+              fontWeight: 600,
+              bgcolor: eliminationColor,
+              color: 'white',
+              '& .MuiChip-label': { px: 1 },
+            }}
+          />
         )}
+
+        {/* Trophy for finalists (1st-3rd only, 4th gets nothing) */}
+        {trophyColor && <Trophy size={TROPHY_ICON_SIZE} color={trophyColor} />}
+
         <Typography
           variant="body2"
           sx={{
             fontWeight: 600,
-            color: isEliminated ? eliminationColor : 'text.secondary',
-            opacity: isGhost ? 0.7 : 1,
-            fontStyle: isGhost ? 'italic' : 'normal',
+            color: wasEliminated ? eliminationColor : 'text.secondary',
+            opacity: isNonAdvancer ? 0.7 : 1,
+            fontStyle: isNonAdvancer ? 'italic' : 'normal',
           }}
         >
           {points} pts
         </Typography>
       </Box>
 
-      {/* Collapsible race cards grid */}
+      {/* Collapsible content */}
       <Collapse in={expanded} timeout="auto">
-        <Box
-          sx={{
-            p: 1.5,
-            bgcolor: 'background.paper',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: 'repeat(3, 1fr)',
-                sm: 'repeat(4, 1fr)',
-                md: 'repeat(5, 1fr)',
-              },
-              gap: 1,
-            }}
-          >
-            {races.map((race) => (
-              <RaceCard key={race.round} race={race} driverId={driverId} isGhost={isGhost} />
-            ))}
-          </Box>
-
-          {/* Ghost total */}
-          {isGhost && points > 0 && (
-            <Typography
-              variant="caption"
-              sx={{ fontStyle: 'italic', color: 'text.secondary', mt: 1, display: 'block' }}
+        <Box sx={{ p: 1.5, bgcolor: 'background.paper' }}>
+          {showRoundByRound ? (
+            // Playoffs: Show races grouped by round
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              {racesByRound.map(({ roundNum, races: roundRaces, points: roundPoints }) => {
+                const roundIsGhost = isRoundGhost(roundRaces);
+                const wasEliminatedThisRound = eliminatedInRound === roundNum;
+                const isFinalRound = roundNum === FINAL_ROUND_NUMBER;
+                return (
+                  <Box key={roundNum}>
+                    {/* Round header row */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        mb: 0.75,
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          fontWeight: 600,
+                          color: roundIsGhost ? 'text.disabled' : 'text.secondary',
+                          minWidth: 36,
+                          fontStyle: roundIsGhost ? 'italic' : 'normal',
+                        }}
+                      >
+                        {getRoundLabel(roundNum)}
+                      </Typography>
+                      <Box sx={{ flex: 1, borderBottom: 1, borderColor: 'divider' }} />
+                      {/* Elimination chip on the round where it happened */}
+                      {wasEliminatedThisRound && (
+                        <Chip
+                          label="Eliminated"
+                          size="small"
+                          sx={{
+                            height: 18,
+                            fontSize: '0.65rem',
+                            fontWeight: 600,
+                            bgcolor: eliminationColor,
+                            color: 'white',
+                            '& .MuiChip-label': { px: 0.75 },
+                          }}
+                        />
+                      )}
+                      {/* Trophy for finalists on the Final round */}
+                      {isFinalRound && trophyColor && (
+                        <Trophy size={TROPHY_ICON_SIZE} color={trophyColor} />
+                      )}
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          fontWeight: 500,
+                          color: wasEliminatedThisRound
+                            ? eliminationColor
+                            : roundIsGhost
+                              ? 'text.disabled'
+                              : 'text.secondary',
+                          fontStyle: roundIsGhost ? 'italic' : 'normal',
+                        }}
+                      >
+                        {roundIsGhost ? `(${roundPoints})` : roundPoints} pts
+                      </Typography>
+                    </Box>
+                    {/* Race cards for this round */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        gap: 1,
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      {roundRaces.map((race) => (
+                        <RaceCard
+                          key={race.round}
+                          race={race}
+                          driverId={driverId}
+                          isGhost={isRaceGhost(race)}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Box>
+          ) : (
+            // Regular season: Simple grid layout
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: 'repeat(3, 1fr)',
+                  sm: 'repeat(4, 1fr)',
+                  md: 'repeat(5, 1fr)',
+                },
+                gap: 1,
+              }}
             >
-              Would have scored: {points} pts
-            </Typography>
+              {races.map((race) => (
+                <RaceCard
+                  key={race.round}
+                  race={race}
+                  driverId={driverId}
+                  isGhost={isRaceGhost(race)}
+                />
+              ))}
+            </Box>
           )}
         </Box>
       </Collapse>
