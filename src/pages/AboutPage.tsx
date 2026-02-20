@@ -30,14 +30,19 @@ export function AboutPage(): React.ReactElement {
           The Philosophy
         </Typography>
         <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
-          For decades, the F1 title has been decided by cumulative points over a long season. While
-          consistency is rewarded, championships are often mathematically decided before the final
-          race (except that one time in 2021).
+          F1 titles are often decided before the final race. 2020 was sealed in Turkey with 3 races
+          left. 2022 in Japan with 4 races left. 2023 in Qatar with 5 races left. Even 2025, which
+          went to Abu Dhabi, saw Norris win the title despite Verstappen winning the final race.
         </Typography>
 
         <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
-          Grand Prix Playoffs introduces a different standard: the title should be decided under
-          elimination pressure, on track, at the season finale.
+          The 2021 finale, Verstappen vs Hamilton, tied on points for the final race was magic. But
+          it almost never happens.
+        </Typography>
+
+        <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
+          Grand Prix Playoffs asks: what if the finale genuinely mattered every single year? This is
+          a parallel universe, not a replacement.
         </Typography>
 
         <Divider sx={{ my: 4 }} />
@@ -133,7 +138,9 @@ export function AboutPage(): React.ReactElement {
           Points System
         </Typography>
         <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
-          Standard F1 points are used. Points reset to zero at the start of each playoff round.
+          Standard F1 points are used. Points reset to zero at the start of each playoff round. The
+          site shows both playoff standings and official F1 points side-by-side, so you get both
+          perspectives.
         </Typography>
 
         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
