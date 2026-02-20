@@ -13,49 +13,102 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
+  Menu,
+  MenuItem,
+  Divider,
+  ListSubheader,
 } from '@mui/material';
-import { Menu, Sun, Moon } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Menu as MenuIcon, Sun, Moon, ChevronDown } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { useThemeStore } from 'src/store';
-
-const NAV_ITEMS = [
-  { label: 'Home', path: '/' },
-  { label: '2024', path: '/2024' },
-  { label: '2025', path: '/2025' },
-  { label: '2026', path: '/2026' },
-  { label: 'About', path: '/about' },
-] as const;
+import { CURRENT_SEASON, HISTORICAL_SEASONS } from 'src/constants';
 
 export function Header(): React.ReactElement {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [seasonAnchor, setSeasonAnchor] = useState<null | HTMLElement>(null);
   const { mode, toggleMode } = useThemeStore();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const seasonMenuOpen = Boolean(seasonAnchor);
 
   const handleDrawerToggle = (): void => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleSeasonMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
+    setSeasonAnchor(event.currentTarget);
+  };
+
+  const handleSeasonMenuClose = (): void => {
+    setSeasonAnchor(null);
+  };
+
+  const handleSeasonSelect = (year: number): void => {
+    navigate(`/${year}`);
+    handleSeasonMenuClose();
+    setMobileOpen(false);
+  };
+
+  const isSeasonPage = location.pathname.match(/^\/\d{4}$/);
+  const currentPageYear = isSeasonPage ? parseInt(location.pathname.slice(1), 10) : null;
+
+  // Mobile drawer content
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+    <Box sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
         GPP
       </Typography>
       <List>
-        {NAV_ITEMS.map((item) => (
-          <ListItem key={item.path} disablePadding>
+        <ListItem disablePadding>
+          <ListItemButton
+            component={Link}
+            to="/"
+            selected={location.pathname === '/'}
+            onClick={handleDrawerToggle}
+            sx={{ textAlign: 'center' }}
+          >
+            <ListItemText primary="Home" />
+          </ListItemButton>
+        </ListItem>
+
+        {/* All Seasons - current first, then historical in reverse order */}
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => handleSeasonSelect(CURRENT_SEASON)}
+            selected={currentPageYear === CURRENT_SEASON}
+            sx={{ textAlign: 'center' }}
+          >
+            <ListItemText primary={CURRENT_SEASON} />
+          </ListItemButton>
+        </ListItem>
+        {[...HISTORICAL_SEASONS].reverse().map((year) => (
+          <ListItem key={year} disablePadding>
             <ListItemButton
-              component={Link}
-              to={item.path}
-              selected={location.pathname === item.path}
-              sx={{ textAlign: 'center' }}
+              onClick={() => handleSeasonSelect(year)}
+              selected={currentPageYear === year}
+              sx={{ textAlign: 'center', py: 0.75 }}
             >
-              <ListItemText primary={item.label} />
+              <ListItemText primary={year} />
             </ListItemButton>
           </ListItem>
         ))}
+
+        <Divider sx={{ my: 1 }} />
+        <ListItem disablePadding>
+          <ListItemButton
+            component={Link}
+            to="/about"
+            selected={location.pathname === '/about'}
+            onClick={handleDrawerToggle}
+            sx={{ textAlign: 'center' }}
+          >
+            <ListItemText primary="About" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -72,7 +125,7 @@ export function Header(): React.ReactElement {
               onClick={handleDrawerToggle}
               sx={{ mr: 2 }}
             >
-              <Menu size={24} />
+              <MenuIcon size={24} />
             </IconButton>
           )}
 
@@ -91,24 +144,83 @@ export function Header(): React.ReactElement {
           </Typography>
 
           {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 2, mr: 2 }}>
-              {NAV_ITEMS.map((item) => (
-                <Typography
-                  key={item.path}
-                  component={Link}
-                  to={item.path}
-                  sx={{
-                    textDecoration: 'none',
-                    color: location.pathname === item.path ? 'primary.main' : 'text.primary',
-                    fontWeight: location.pathname === item.path ? 600 : 400,
-                    '&:hover': {
-                      color: 'primary.main',
-                    },
-                  }}
-                >
-                  {item.label}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
+              <Typography
+                component={Link}
+                to="/"
+                sx={{
+                  textDecoration: 'none',
+                  color: location.pathname === '/' ? 'primary.main' : 'text.primary',
+                  fontWeight: location.pathname === '/' ? 600 : 400,
+                  '&:hover': { color: 'primary.main' },
+                }}
+              >
+                Home
+              </Typography>
+
+              {/* Seasons Dropdown */}
+              <Box
+                onClick={handleSeasonMenuOpen}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  color: isSeasonPage ? 'primary.main' : 'text.primary',
+                  fontWeight: isSeasonPage ? 600 : 400,
+                  '&:hover': { color: 'primary.main' },
+                }}
+                aria-controls={seasonMenuOpen ? 'season-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={seasonMenuOpen ? 'true' : undefined}
+              >
+                <Typography sx={{ fontWeight: 'inherit', color: 'inherit' }}>
+                  {currentPageYear ? `${currentPageYear} Season` : 'Seasons'}
                 </Typography>
-              ))}
+                <ChevronDown size={18} style={{ marginLeft: 4 }} />
+              </Box>
+
+              <Menu
+                id="season-menu"
+                anchorEl={seasonAnchor}
+                open={seasonMenuOpen}
+                onClose={handleSeasonMenuClose}
+                MenuListProps={{ 'aria-labelledby': 'season-button' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              >
+                <MenuItem
+                  onClick={() => handleSeasonSelect(CURRENT_SEASON)}
+                  selected={currentPageYear === CURRENT_SEASON}
+                  sx={{ fontWeight: currentPageYear === CURRENT_SEASON ? 600 : 400 }}
+                >
+                  {CURRENT_SEASON} Season (Current)
+                </MenuItem>
+                <Divider />
+                <ListSubheader sx={{ lineHeight: 2 }}>Past Seasons</ListSubheader>
+                {[...HISTORICAL_SEASONS].reverse().map((year) => (
+                  <MenuItem
+                    key={year}
+                    onClick={() => handleSeasonSelect(year)}
+                    selected={currentPageYear === year}
+                    sx={{ fontWeight: currentPageYear === year ? 600 : 400 }}
+                  >
+                    {year}
+                  </MenuItem>
+                ))}
+              </Menu>
+
+              <Typography
+                component={Link}
+                to="/about"
+                sx={{
+                  textDecoration: 'none',
+                  color: location.pathname === '/about' ? 'primary.main' : 'text.primary',
+                  fontWeight: location.pathname === '/about' ? 600 : 400,
+                  '&:hover': { color: 'primary.main' },
+                }}
+              >
+                About
+              </Typography>
             </Box>
           )}
 

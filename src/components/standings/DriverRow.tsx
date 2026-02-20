@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import type { Driver, PlayoffState, Race } from 'src/types';
 import { getTeamColor } from 'src/constants';
 import { ELIMINATION_COLOR } from 'src/theme/palette';
-import { getPlayoffRoundPoints, getEliminationRound } from 'src/utils';
+import { getPlayoffRoundPoints, getEliminationRound, advancedViaTiebreaker } from 'src/utils';
 
 import { DriverDetail } from './DriverDetail';
 
@@ -59,6 +59,11 @@ export function DriverRow({
   const r3Points = getPlayoffRoundPoints(round3, driver.driverId);
   const finalPoints = getPlayoffRoundPoints(finalRound, driver.driverId);
 
+  // Check if driver advanced via tiebreaker in each round
+  const r1Tiebreaker = advancedViaTiebreaker(round1, driver.driverId);
+  const r2Tiebreaker = advancedViaTiebreaker(round2, driver.driverId);
+  const r3Tiebreaker = advancedViaTiebreaker(round3, driver.driverId);
+
   // Determine which round the driver was eliminated in (for styling)
   const eliminatedR1 = elimRound === 1;
   const eliminatedR2 = elimRound === 2;
@@ -78,7 +83,8 @@ export function DriverRow({
     points: number | null,
     eliminated: boolean,
     isMuted: boolean,
-    isFinal: boolean = false
+    isFinal: boolean = false,
+    showTiebreaker: boolean = false
   ): React.ReactNode => {
     const textAlign = isFinal ? 'center' : 'right';
     if (points === null) {
@@ -88,6 +94,24 @@ export function DriverRow({
         </Typography>
       );
     }
+
+    const tiebreakerBadge = showTiebreaker ? (
+      <Box
+        component="sup"
+        sx={{
+          position: 'absolute',
+          top: -2,
+          right: -14,
+          fontSize: '0.6rem',
+          fontWeight: 600,
+          color: 'text.secondary',
+          opacity: 0.7,
+        }}
+      >
+        Tie
+      </Box>
+    ) : null;
+
     // Show muted points for rounds after elimination
     if (isMuted) {
       return (
@@ -113,9 +137,16 @@ export function DriverRow({
       );
     }
     return (
-      <Typography variant="body2" fontWeight={isFinal && isChampion ? 700 : 400} sx={{ textAlign }}>
-        {points}
-      </Typography>
+      <Box sx={{ position: 'relative', display: 'inline-block' }}>
+        <Typography
+          variant="body2"
+          fontWeight={isFinal && isChampion ? 700 : 400}
+          sx={{ textAlign }}
+        >
+          {points}
+        </Typography>
+        {tiebreakerBadge}
+      </Box>
     );
   };
 
@@ -184,17 +215,17 @@ export function DriverRow({
 
         {/* Round 1 */}
         <TableCell align="right" sx={{ p: 1 }}>
-          {renderPointsCell(r1Points, eliminatedR1, wasEliminatedBeforeR1)}
+          {renderPointsCell(r1Points, eliminatedR1, wasEliminatedBeforeR1, false, r1Tiebreaker)}
         </TableCell>
 
         {/* Round 2 */}
         <TableCell align="right" sx={{ p: 1 }}>
-          {renderPointsCell(r2Points, eliminatedR2, wasEliminatedBeforeR2)}
+          {renderPointsCell(r2Points, eliminatedR2, wasEliminatedBeforeR2, false, r2Tiebreaker)}
         </TableCell>
 
         {/* Round 3 */}
         <TableCell align="right" sx={{ p: 1 }}>
-          {renderPointsCell(r3Points, eliminatedR3, wasEliminatedBeforeR3)}
+          {renderPointsCell(r3Points, eliminatedR3, wasEliminatedBeforeR3, false, r3Tiebreaker)}
         </TableCell>
 
         {/* Final */}

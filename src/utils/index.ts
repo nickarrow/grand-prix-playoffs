@@ -47,3 +47,24 @@ export function getBracketPoints(
   }
   return total;
 }
+
+// Check if a driver advanced via tiebreaker in a specific round
+// Returns true if driver had same points as an eliminated driver but advanced
+export function advancedViaTiebreaker(round: PlayoffRound | undefined, driverId: string): boolean {
+  if (!round || round.eliminated.length === 0) return false;
+
+  // Get this driver's points
+  const driverStanding = round.standings.find((s) => s.driver.driverId === driverId);
+  if (!driverStanding) return false;
+
+  // Check if driver advanced (not eliminated)
+  if (round.eliminated.includes(driverId)) return false;
+
+  // Check if any eliminated driver had the same points
+  const eliminatedPoints = round.eliminated.map((elimId) => {
+    const standing = round.standings.find((s) => s.driver.driverId === elimId);
+    return standing?.points ?? -1;
+  });
+
+  return eliminatedPoints.includes(driverStanding.points);
+}

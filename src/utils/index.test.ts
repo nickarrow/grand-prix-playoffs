@@ -2,7 +2,12 @@ import { describe, it, expect } from 'vitest';
 
 import type { PlayoffState, PlayoffRound, DriverStanding } from 'src/types';
 
-import { getEliminationRound, getBracketPoints, getPlayoffRoundPoints } from './index';
+import {
+  getEliminationRound,
+  getBracketPoints,
+  getPlayoffRoundPoints,
+  advancedViaTiebreaker,
+} from './index';
 
 // Helper to create a mock driver standing
 const createStanding = (driverId: string, points: number): DriverStanding => ({
@@ -187,5 +192,85 @@ describe('getBracketPoints', () => {
 
     // d2 only has R1 points
     expect(getBracketPoints('d2', 1, state)).toBe(40);
+  });
+});
+
+describe('advancedViaTiebreaker', () => {
+  it('should return false for undefined round', () => {
+    expect(advancedViaTiebreaker(undefined, 'd1')).toBe(false);
+  });
+
+  it('should return false for round with no eliminations', () => {
+    const round = createRound(
+      1,
+      [
+        { id: 'd1', points: 50 },
+        { id: 'd2', points: 40 },
+      ],
+      []
+    );
+    expect(advancedViaTiebreaker(round, 'd1')).toBe(false);
+  });
+
+  it('should return false for driver not in standings', () => {
+    const round = createRound(1, [{ id: 'd1', points: 50 }], ['d2']);
+    expect(advancedViaTiebreaker(round, 'd99')).toBe(false);
+  });
+
+  it('should return false for eliminated driver', () => {
+    const round = createRound(
+      1,
+      [
+        { id: 'd1', points: 50 },
+        { id: 'd2', points: 50 },
+      ],
+      ['d2']
+    );
+    expect(advancedViaTiebreaker(round, 'd2')).toBe(false);
+  });
+
+  it('should return false when advancing driver has more points than eliminated', () => {
+    const round = createRound(
+      1,
+      [
+        { id: 'd1', points: 50 },
+        { id: 'd2', points: 40 },
+        { id: 'd3', points: 30 },
+      ],
+      ['d3']
+    );
+    expect(advancedViaTiebreaker(round, 'd1')).toBe(false);
+    expect(advancedViaTiebreaker(round, 'd2')).toBe(false);
+  });
+
+  it('should return true when advancing driver tied with eliminated driver', () => {
+    const round = createRound(
+      1,
+      [
+        { id: 'd1', points: 50 },
+        { id: 'd2', points: 30 },
+        { id: 'd3', points: 30 },
+      ],
+      ['d3']
+    );
+    // d2 advanced with same points as eliminated d3
+    expect(advancedViaTiebreaker(round, 'd2')).toBe(true);
+    // d1 had more points, not a tiebreaker
+    expect(advancedViaTiebreaker(round, 'd1')).toBe(false);
+  });
+
+  it('should return true for multiple drivers advancing via tiebreaker', () => {
+    const round = createRound(
+      1,
+      [
+        { id: 'd1', points: 0 },
+        { id: 'd2', points: 0 },
+        { id: 'd3', points: 0 },
+      ],
+      ['d3']
+    );
+    // d1 and d2 both advanced with 0 points, same as eliminated d3
+    expect(advancedViaTiebreaker(round, 'd1')).toBe(true);
+    expect(advancedViaTiebreaker(round, 'd2')).toBe(true);
   });
 });

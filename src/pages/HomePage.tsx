@@ -1,13 +1,33 @@
-import { Box, Container, Typography, Button, Paper, CircularProgress, Alert } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Paper,
+  CircularProgress,
+  Alert,
+  FormControl,
+  Select,
+  MenuItem,
+} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material';
 import { ArrowRight } from 'lucide-react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { usePlayoffData } from 'src/hooks';
 import { StandingsTable } from 'src/components/standings';
-import { CURRENT_SEASON } from 'src/constants';
+import { CURRENT_SEASON, HISTORICAL_SEASONS } from 'src/constants';
 
 export function HomePage(): React.ReactElement {
   const { playoffState, races, isLoading, error } = usePlayoffData(CURRENT_SEASON);
+  const navigate = useNavigate();
+
+  const handleSeasonChange = (event: SelectChangeEvent<string>): void => {
+    const year = event.target.value;
+    if (year) {
+      navigate(`/${year}`);
+    }
+  };
 
   return (
     <Container maxWidth="lg">
@@ -41,9 +61,10 @@ export function HomePage(): React.ReactElement {
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: { xs: 'flex-start', md: 'center' },
-              gap: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1.5,
             }}
           >
             <Button
@@ -55,26 +76,23 @@ export function HomePage(): React.ReactElement {
             >
               How it works
             </Button>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button
-                component={RouterLink}
-                to="/2024"
-                variant="text"
-                size="medium"
+            <FormControl size="small" sx={{ minWidth: 160 }}>
+              <Select
+                value=""
+                onChange={handleSeasonChange}
+                displayEmpty
                 sx={{ textTransform: 'none' }}
               >
-                View 2024 results
-              </Button>
-              <Button
-                component={RouterLink}
-                to="/2025"
-                variant="text"
-                size="medium"
-                sx={{ textTransform: 'none' }}
-              >
-                View 2025 results
-              </Button>
-            </Box>
+                <MenuItem value="" disabled>
+                  View past season
+                </MenuItem>
+                {[...HISTORICAL_SEASONS].reverse().map((year) => (
+                  <MenuItem key={year} value={year.toString()}>
+                    {year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         </Box>
 
