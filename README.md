@@ -1,4 +1,4 @@
-# Grand Prix Playoffs 1
+# Grand Prix Playoffs
 
 > Reimagining the Formula 1 Drivers' Championship as a true elimination battle.
 
