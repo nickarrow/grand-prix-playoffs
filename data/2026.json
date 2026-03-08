@@ -217,5 +217,404 @@
       "date": "2026-12-06"
     }
   ],
-  "races": []
+  "races": [
+    {
+      "season": 2026,
+      "round": 1,
+      "raceName": "Australian Grand Prix",
+      "circuitId": "albert_park",
+      "circuitName": "Albert Park Grand Prix Circuit",
+      "country": "Australia",
+      "date": "2026-03-08",
+      "results": [
+        {
+          "driverId": "russell",
+          "driverCode": "RUS",
+          "firstName": "George",
+          "lastName": "Russell",
+          "constructorId": "mercedes",
+          "constructorName": "Mercedes",
+          "position": 1,
+          "points": 25,
+          "grid": null,
+          "status": "Finished",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "antonelli",
+          "driverCode": "ANT",
+          "firstName": "Andrea Kimi",
+          "lastName": "Antonelli",
+          "constructorId": "mercedes",
+          "constructorName": "Mercedes",
+          "position": 2,
+          "points": 18,
+          "grid": null,
+          "status": "Finished",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "leclerc",
+          "driverCode": "LEC",
+          "firstName": "Charles",
+          "lastName": "Leclerc",
+          "constructorId": "ferrari",
+          "constructorName": "Ferrari",
+          "position": 3,
+          "points": 15,
+          "grid": null,
+          "status": "Finished",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "hamilton",
+          "driverCode": "HAM",
+          "firstName": "Lewis",
+          "lastName": "Hamilton",
+          "constructorId": "ferrari",
+          "constructorName": "Ferrari",
+          "position": 4,
+          "points": 12,
+          "grid": null,
+          "status": "Finished",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "norris",
+          "driverCode": "NOR",
+          "firstName": "Lando",
+          "lastName": "Norris",
+          "constructorId": "mclaren",
+          "constructorName": "McLaren",
+          "position": 5,
+          "points": 10,
+          "grid": null,
+          "status": "Finished",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "max_verstappen",
+          "driverCode": "VER",
+          "firstName": "Max",
+          "lastName": "Verstappen",
+          "constructorId": "red_bull",
+          "constructorName": "Red Bull",
+          "position": 6,
+          "points": 8,
+          "grid": null,
+          "status": "Finished",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "bearman",
+          "driverCode": "BEA",
+          "firstName": "Oliver",
+          "lastName": "Bearman",
+          "constructorId": "haas",
+          "constructorName": "Haas F1 Team",
+          "position": 7,
+          "points": 6,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "arvid_lindblad",
+          "driverCode": "LIN",
+          "firstName": "Arvid",
+          "lastName": "Lindblad",
+          "constructorId": "rb",
+          "constructorName": "RB F1 Team",
+          "position": 8,
+          "points": 4,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "bortoleto",
+          "driverCode": "BOR",
+          "firstName": "Gabriel",
+          "lastName": "Bortoleto",
+          "constructorId": "audi",
+          "constructorName": "Audi",
+          "position": 9,
+          "points": 2,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "gasly",
+          "driverCode": "GAS",
+          "firstName": "Pierre",
+          "lastName": "Gasly",
+          "constructorId": "alpine",
+          "constructorName": "Alpine F1 Team",
+          "position": 10,
+          "points": 1,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "ocon",
+          "driverCode": "OCO",
+          "firstName": "Esteban",
+          "lastName": "Ocon",
+          "constructorId": "haas",
+          "constructorName": "Haas F1 Team",
+          "position": 11,
+          "points": 0,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "albon",
+          "driverCode": "ALB",
+          "firstName": "Alexander",
+          "lastName": "Albon",
+          "constructorId": "williams",
+          "constructorName": "Williams",
+          "position": 12,
+          "points": 0,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "lawson",
+          "driverCode": "LAW",
+          "firstName": "Liam",
+          "lastName": "Lawson",
+          "constructorId": "rb",
+          "constructorName": "RB F1 Team",
+          "position": 13,
+          "points": 0,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "colapinto",
+          "driverCode": "COL",
+          "firstName": "Franco",
+          "lastName": "Colapinto",
+          "constructorId": "alpine",
+          "constructorName": "Alpine F1 Team",
+          "position": 14,
+          "points": 0,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "sainz",
+          "driverCode": "SAI",
+          "firstName": "Carlos",
+          "lastName": "Sainz",
+          "constructorId": "williams",
+          "constructorName": "Williams",
+          "position": 15,
+          "points": 0,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "perez",
+          "driverCode": "PER",
+          "firstName": "Sergio",
+          "lastName": "Pérez",
+          "constructorId": "cadillac",
+          "constructorName": "Cadillac F1 Team",
+          "position": 16,
+          "points": 0,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "stroll",
+          "driverCode": "STR",
+          "firstName": "Lance",
+          "lastName": "Stroll",
+          "constructorId": "aston_martin",
+          "constructorName": "Aston Martin",
+          "position": 17,
+          "points": 0,
+          "grid": null,
+          "status": "Lapped",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "alonso",
+          "driverCode": "ALO",
+          "firstName": "Fernando",
+          "lastName": "Alonso",
+          "constructorId": "aston_martin",
+          "constructorName": "Aston Martin",
+          "position": null,
+          "points": 0,
+          "grid": null,
+          "status": "Retired",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "bottas",
+          "driverCode": "BOT",
+          "firstName": "Valtteri",
+          "lastName": "Bottas",
+          "constructorId": "cadillac",
+          "constructorName": "Cadillac F1 Team",
+          "position": null,
+          "points": 0,
+          "grid": null,
+          "status": "Retired",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "hadjar",
+          "driverCode": "HAD",
+          "firstName": "Isack",
+          "lastName": "Hadjar",
+          "constructorId": "red_bull",
+          "constructorName": "Red Bull",
+          "position": null,
+          "points": 0,
+          "grid": null,
+          "status": "Retired",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "piastri",
+          "driverCode": "PIA",
+          "firstName": "Oscar",
+          "lastName": "Piastri",
+          "constructorId": "mclaren",
+          "constructorName": "McLaren",
+          "position": null,
+          "points": 0,
+          "grid": null,
+          "status": "Did not start",
+          "fastestLap": false,
+          "fastestLapRank": null
+        },
+        {
+          "driverId": "hulkenberg",
+          "driverCode": "HUL",
+          "firstName": "Nico",
+          "lastName": "Hülkenberg",
+          "constructorId": "audi",
+          "constructorName": "Audi",
+          "position": null,
+          "points": 0,
+          "grid": null,
+          "status": "Did not start",
+          "fastestLap": false,
+          "fastestLapRank": null
+        }
+      ],
+      "qualifying": [
+        {
+          "driverId": "russell",
+          "position": 1
+        },
+        {
+          "driverId": "antonelli",
+          "position": 2
+        },
+        {
+          "driverId": "hadjar",
+          "position": 3
+        },
+        {
+          "driverId": "leclerc",
+          "position": 4
+        },
+        {
+          "driverId": "piastri",
+          "position": 5
+        },
+        {
+          "driverId": "norris",
+          "position": 6
+        },
+        {
+          "driverId": "hamilton",
+          "position": 7
+        },
+        {
+          "driverId": "lawson",
+          "position": 8
+        },
+        {
+          "driverId": "arvid_lindblad",
+          "position": 9
+        },
+        {
+          "driverId": "bortoleto",
+          "position": 10
+        },
+        {
+          "driverId": "hulkenberg",
+          "position": 11
+        },
+        {
+          "driverId": "bearman",
+          "position": 12
+        },
+        {
+          "driverId": "ocon",
+          "position": 13
+        },
+        {
+          "driverId": "gasly",
+          "position": 14
+        },
+        {
+          "driverId": "albon",
+          "position": 15
+        },
+        {
+          "driverId": "colapinto",
+          "position": 16
+        },
+        {
+          "driverId": "alonso",
+          "position": 17
+        },
+        {
+          "driverId": "perez",
+          "position": 18
+        },
+        {
+          "driverId": "bottas",
+          "position": 19
+        }
+      ],
+      "sprint": null
+    }
+  ]
 }
