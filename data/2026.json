@@ -239,7 +239,7 @@
           "grid": null,
           "status": "Finished",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 6
         },
         {
           "driverId": "antonelli",
@@ -253,7 +253,7 @@
           "grid": null,
           "status": "Finished",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 3
         },
         {
           "driverId": "leclerc",
@@ -267,7 +267,7 @@
           "grid": null,
           "status": "Finished",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 5
         },
         {
           "driverId": "hamilton",
@@ -281,7 +281,7 @@
           "grid": null,
           "status": "Finished",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 4
         },
         {
           "driverId": "norris",
@@ -295,7 +295,7 @@
           "grid": null,
           "status": "Finished",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 2
         },
         {
           "driverId": "max_verstappen",
@@ -308,8 +308,8 @@
           "points": 8,
           "grid": null,
           "status": "Finished",
-          "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLap": true,
+          "fastestLapRank": 1
         },
         {
           "driverId": "bearman",
@@ -323,7 +323,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 11
         },
         {
           "driverId": "arvid_lindblad",
@@ -337,7 +337,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 12
         },
         {
           "driverId": "bortoleto",
@@ -351,7 +351,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 8
         },
         {
           "driverId": "gasly",
@@ -365,7 +365,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 15
         },
         {
           "driverId": "ocon",
@@ -379,7 +379,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 14
         },
         {
           "driverId": "albon",
@@ -393,7 +393,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 13
         },
         {
           "driverId": "lawson",
@@ -407,7 +407,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 10
         },
         {
           "driverId": "colapinto",
@@ -421,7 +421,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 7
         },
         {
           "driverId": "sainz",
@@ -435,7 +435,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 9
         },
         {
           "driverId": "perez",
@@ -449,7 +449,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 19
         },
         {
           "driverId": "stroll",
@@ -463,7 +463,7 @@
           "grid": null,
           "status": "Lapped",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 17
         },
         {
           "driverId": "alonso",
@@ -477,7 +477,7 @@
           "grid": null,
           "status": "Retired",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 18
         },
         {
           "driverId": "bottas",
@@ -491,7 +491,7 @@
           "grid": null,
           "status": "Retired",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 20
         },
         {
           "driverId": "hadjar",
@@ -505,7 +505,7 @@
           "grid": null,
           "status": "Retired",
           "fastestLap": false,
-          "fastestLapRank": null
+          "fastestLapRank": 16
         },
         {
           "driverId": "piastri",
