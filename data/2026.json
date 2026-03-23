@@ -197,24 +197,6 @@
       "circuitName": "Yas Marina Circuit",
       "country": "UAE",
       "date": "2026-12-06"
-    },
-    {
-      "season": 2026,
-      "round": null,
-      "raceName": "Bahrain Grand Prix",
-      "circuitId": "bahrain",
-      "circuitName": "Bahrain International Circuit",
-      "country": "Bahrain",
-      "date": "2026-04-12"
-    },
-    {
-      "season": 2026,
-      "round": null,
-      "raceName": "Saudi Arabian Grand Prix",
-      "circuitId": "jeddah",
-      "circuitName": "Jeddah Corniche Circuit",
-      "country": "Saudi Arabia",
-      "date": "2026-04-19"
     }
   ],
   "races": [
