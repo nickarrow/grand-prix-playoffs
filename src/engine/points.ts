@@ -1,25 +1,21 @@
 // Points calculation utilities
+// Uses official F1 points from the API data directly (no custom recalculation)
 
-import {
-  RACE_POINTS,
-  SPRINT_POINTS,
-  POLE_POSITION_POINTS,
-  FASTEST_LAP_POINTS,
-  RACE_POINTS_POSITIONS,
-  SPRINT_POINTS_POSITIONS,
-} from 'src/constants';
+import { RACE_POINTS_POSITIONS, SPRINT_POINTS_POSITIONS } from 'src/constants';
 import type { Race } from 'src/types';
 
-// Get points for a race position (0 if outside points)
+// Get expected points for a race position (used for tiebreaker/reference only)
 export function getRacePoints(position: number | null): number {
+  const RACE_POINTS = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1] as const;
   if (position === null || position < 1 || position > RACE_POINTS_POSITIONS) {
     return 0;
   }
   return RACE_POINTS[position - 1] ?? 0;
 }
 
-// Get points for a sprint position (0 if outside points)
+// Get expected points for a sprint position (used for reference only)
 export function getSprintPoints(position: number | null): number {
+  const SPRINT_POINTS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
   if (position === null || position < 1 || position > SPRINT_POINTS_POSITIONS) {
     return 0;
   }
@@ -27,32 +23,22 @@ export function getSprintPoints(position: number | null): number {
 }
 
 // Calculate total points for a driver in a single race weekend
+// Uses the official points from API data (includes any bonuses the FIA awarded that season)
 export function calculateRaceWeekendPoints(driverId: string, race: Race): number {
   let points = 0;
 
-  // Race points
+  // Race points (official from API)
   const raceResult = race.results.find((r) => r.driverId === driverId);
   if (raceResult) {
-    points += getRacePoints(raceResult.position);
-
-    // Fastest lap bonus (already validated in API layer)
-    if (raceResult.fastestLap) {
-      points += FASTEST_LAP_POINTS;
-    }
+    points += raceResult.points;
   }
 
-  // Sprint points
+  // Sprint points (official from API)
   if (race.sprint) {
     const sprintResult = race.sprint.find((r) => r.driverId === driverId);
     if (sprintResult) {
-      points += getSprintPoints(sprintResult.position);
+      points += sprintResult.points;
     }
-  }
-
-  // Pole position bonus
-  const poleDriver = race.qualifying.find((q) => q.position === 1);
-  if (poleDriver?.driverId === driverId) {
-    points += POLE_POSITION_POINTS;
   }
 
   return points;

@@ -6,10 +6,9 @@ import {
   PLAYOFF_QUALIFIERS,
   RACE_POINTS,
   SPRINT_POINTS,
-  POLE_POSITION_POINTS,
-  FASTEST_LAP_POINTS,
   RACES_PER_ROUND,
   PLAYOFF_ROUNDS,
+  LAST_FASTEST_LAP_BONUS_SEASON,
 } from 'src/constants';
 
 export function AboutPage(): React.ReactElement {
@@ -158,11 +157,10 @@ export function AboutPage(): React.ReactElement {
         </Typography>
 
         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
-          Bonus Points
+          Bonus Points (2020–{LAST_FASTEST_LAP_BONUS_SEASON} seasons)
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Pole Position: {POLE_POSITION_POINTS} pt • Fastest Lap: {FASTEST_LAP_POINTS} pt (if
-          finished top 10)
+          Fastest Lap: 1 pt (if finished top 10). This bonus was removed from the {LAST_FASTEST_LAP_BONUS_SEASON + 1} season onwards.
         </Typography>
 
         <Divider sx={{ my: 4 }} />

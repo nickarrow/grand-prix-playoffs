@@ -1,21 +1,15 @@
 import { describe, it, expect } from 'vitest';
 
-import {
-  RACE_POINTS,
-  SPRINT_POINTS,
-  POLE_POSITION_POINTS,
-  FASTEST_LAP_POINTS,
-} from 'src/constants';
 import type { Race } from 'src/types';
 
 import { getRacePoints, getSprintPoints, calculateRaceWeekendPoints } from './points';
 
 describe('getRacePoints', () => {
   it('should return correct points for positions 1-10', () => {
-    expect(getRacePoints(1)).toBe(RACE_POINTS[0]); // 25
-    expect(getRacePoints(2)).toBe(RACE_POINTS[1]); // 18
-    expect(getRacePoints(3)).toBe(RACE_POINTS[2]); // 15
-    expect(getRacePoints(10)).toBe(RACE_POINTS[9]); // 1
+    expect(getRacePoints(1)).toBe(25);
+    expect(getRacePoints(2)).toBe(18);
+    expect(getRacePoints(3)).toBe(15);
+    expect(getRacePoints(10)).toBe(1);
   });
 
   it('should return 0 for positions outside top 10', () => {
@@ -35,8 +29,8 @@ describe('getRacePoints', () => {
 
 describe('getSprintPoints', () => {
   it('should return correct points for positions 1-8', () => {
-    expect(getSprintPoints(1)).toBe(SPRINT_POINTS[0]); // 8
-    expect(getSprintPoints(8)).toBe(SPRINT_POINTS[7]); // 1
+    expect(getSprintPoints(1)).toBe(8);
+    expect(getSprintPoints(8)).toBe(1);
   });
 
   it('should return 0 for positions outside top 8', () => {
@@ -47,20 +41,20 @@ describe('getSprintPoints', () => {
 
 describe('calculateRaceWeekendPoints', () => {
   const createMockRace = (overrides: Partial<Race> = {}): Race => ({
-    season: 2025,
+    season: 2026,
     round: 1,
     raceName: 'Test GP',
     circuitId: 'test',
     circuitName: 'Test Circuit',
     country: 'Test',
-    date: '2025-03-01',
+    date: '2026-03-01',
     results: [],
     qualifying: [],
     sprint: null,
     ...overrides,
   });
 
-  it('should calculate race points correctly', () => {
+  it('should use official points from API data', () => {
     const race = createMockRace({
       results: [
         {
@@ -78,13 +72,14 @@ describe('calculateRaceWeekendPoints', () => {
     expect(calculateRaceWeekendPoints('verstappen', race)).toBe(25);
   });
 
-  it('should add fastest lap bonus when eligible', () => {
+  it('should use API points that include fastest lap bonus for pre-2025 seasons', () => {
     const race = createMockRace({
+      season: 2024,
       results: [
         {
           driverId: 'verstappen',
           position: 1,
-          points: 25,
+          points: 26, // API includes the 1pt fastest lap bonus for 2024
           grid: 1,
           status: 'Finished',
           fastestLap: true,
@@ -93,29 +88,29 @@ describe('calculateRaceWeekendPoints', () => {
       ],
     });
 
-    expect(calculateRaceWeekendPoints('verstappen', race)).toBe(25 + FASTEST_LAP_POINTS);
+    expect(calculateRaceWeekendPoints('verstappen', race)).toBe(26);
   });
 
-  it('should add pole position bonus', () => {
+  it('should not add any bonus on top of API points for 2025+ seasons', () => {
     const race = createMockRace({
+      season: 2026,
       results: [
         {
           driverId: 'verstappen',
           position: 1,
-          points: 25,
+          points: 25, // No fastest lap bonus in 2025+
           grid: 1,
           status: 'Finished',
-          fastestLap: false,
-          fastestLapRank: null,
+          fastestLap: true, // Even if marked, no extra points
+          fastestLapRank: 1,
         },
       ],
-      qualifying: [{ driverId: 'verstappen', position: 1 }],
     });
 
-    expect(calculateRaceWeekendPoints('verstappen', race)).toBe(25 + POLE_POSITION_POINTS);
+    expect(calculateRaceWeekendPoints('verstappen', race)).toBe(25);
   });
 
-  it('should add sprint points when sprint race exists', () => {
+  it('should add sprint points from API data', () => {
     const race = createMockRace({
       results: [
         {
@@ -131,7 +126,7 @@ describe('calculateRaceWeekendPoints', () => {
       sprint: [{ driverId: 'verstappen', position: 1, points: 8 }],
     });
 
-    expect(calculateRaceWeekendPoints('verstappen', race)).toBe(25 + 8);
+    expect(calculateRaceWeekendPoints('verstappen', race)).toBe(33);
   });
 
   it('should return 0 for DNF', () => {
@@ -168,5 +163,25 @@ describe('calculateRaceWeekendPoints', () => {
     });
 
     expect(calculateRaceWeekendPoints('verstappen', race)).toBe(0);
+  });
+
+  it('should not add pole position bonus (never an official F1 rule)', () => {
+    const race = createMockRace({
+      results: [
+        {
+          driverId: 'verstappen',
+          position: 1,
+          points: 25,
+          grid: 1,
+          status: 'Finished',
+          fastestLap: false,
+          fastestLapRank: null,
+        },
+      ],
+      qualifying: [{ driverId: 'verstappen', position: 1 }],
+    });
+
+    // Should be exactly 25, no pole bonus
+    expect(calculateRaceWeekendPoints('verstappen', race)).toBe(25);
   });
 });

@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material/styles';
 
 import type { Race } from 'src/types';
 import { PODIUM_POSITIONS, POLE_POSITION } from 'src/constants';
+import { seasonHasFastestLapBonus } from 'src/constants/points';
 import { POINTS_COLORS } from 'src/theme/palette';
 
 interface RaceCardProps {
@@ -43,17 +44,17 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
 
   const raceResult = race.results.find((r) => r.driverId === driverId);
   const sprintResult = race.sprint?.find((s) => s.driverId === driverId);
-  const qualifyingResult = race.qualifying.find((q) => q.driverId === driverId);
 
-  // Calculate all points in one place
-  const points = {
-    race: raceResult?.points ?? 0,
-    sprint: sprintResult?.points ?? 0,
-    pole: qualifyingResult?.position === POLE_POSITION ? 1 : 0,
-    fastestLap: raceResult?.fastestLap === true ? 1 : 0,
-  };
-  const totalPoints = points.race + points.sprint + points.pole + points.fastestLap;
-  const hasBonus = points.sprint > 0 || points.pole > 0 || points.fastestLap > 0;
+  // Points come directly from API data (official F1 points for that season)
+  const racePoints = raceResult?.points ?? 0;
+  const sprintPoints = sprintResult?.points ?? 0;
+
+  // Fastest lap indicator — only relevant for seasons that awarded the bonus
+  const hasFastestLapBonus =
+    seasonHasFastestLapBonus(race.season) && raceResult?.fastestLap === true;
+
+  const totalPoints = racePoints + sprintPoints;
+  const hasBonus = sprintPoints > 0 || hasFastestLapBonus;
 
   const position = raceResult?.position ?? null;
   const status = raceResult?.status ?? 'Unknown';
@@ -99,8 +100,7 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
         {isGhost ? `(${totalPoints})` : totalPoints} pts
       </Typography>
 
-      {/* Points breakdown - only show if there are bonus points */}
-      {/* Order: Sprint (Sat) → Pole (Sat) → Race (Sun) → Fastest Lap (during race) */}
+      {/* Points breakdown - only show if there are bonus/extra point sources */}
       {hasBonus && (
         <Box
           sx={{
@@ -111,7 +111,7 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
             mt: 0.5,
           }}
         >
-          {points.sprint > 0 && (
+          {sprintPoints > 0 && (
             <Typography
               variant="caption"
               sx={{
@@ -119,26 +119,15 @@ export function RaceCard({ race, driverId, isGhost = false }: RaceCardProps): Re
                 color: mode === 'dark' ? POINTS_COLORS.sprint.dark : POINTS_COLORS.sprint.light,
               }}
             >
-              S:{points.sprint}
+              S:{sprintPoints}
             </Typography>
           )}
-          {points.pole > 0 && (
-            <Typography
-              variant="caption"
-              sx={{
-                fontSize: '0.7rem',
-                color: mode === 'dark' ? POINTS_COLORS.pole.dark : POINTS_COLORS.pole.light,
-              }}
-            >
-              P:1
-            </Typography>
-          )}
-          {points.race > 0 && (
+          {racePoints > 0 && sprintPoints > 0 && (
             <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>
-              R:{points.race}
+              R:{racePoints}
             </Typography>
           )}
-          {points.fastestLap > 0 && (
+          {hasFastestLapBonus && (
             <Typography
               variant="caption"
               sx={{
