@@ -138,6 +138,15 @@
     {
       "season": 2026,
       "round": 16,
+      "raceName": "Bahrain Grand Prix in Malaysia",
+      "circuitId": "sepang",
+      "circuitName": "Sepang International Circuit",
+      "country": "Malaysia",
+      "date": "2026-10-04"
+    },
+    {
+      "season": 2026,
+      "round": 17,
       "raceName": "Singapore Grand Prix",
       "circuitId": "marina_bay",
       "circuitName": "Marina Bay Street Circuit",
@@ -146,7 +155,7 @@
     },
     {
       "season": 2026,
-      "round": 17,
+      "round": 18,
       "raceName": "United States Grand Prix",
       "circuitId": "americas",
       "circuitName": "Circuit of the Americas",
@@ -155,7 +164,7 @@
     },
     {
       "season": 2026,
-      "round": 18,
+      "round": 19,
       "raceName": "Mexico City Grand Prix",
       "circuitId": "rodriguez",
       "circuitName": "Autódromo Hermanos Rodríguez",
@@ -164,7 +173,7 @@
     },
     {
       "season": 2026,
-      "round": 19,
+      "round": 20,
       "raceName": "Brazilian Grand Prix",
       "circuitId": "interlagos",
       "circuitName": "Autódromo José Carlos Pace",
@@ -173,7 +182,7 @@
     },
     {
       "season": 2026,
-      "round": 20,
+      "round": 21,
       "raceName": "Las Vegas Grand Prix",
       "circuitId": "vegas",
       "circuitName": "Las Vegas Strip Street Circuit",
@@ -182,7 +191,7 @@
     },
     {
       "season": 2026,
-      "round": 21,
+      "round": 22,
       "raceName": "Qatar Grand Prix",
       "circuitId": "losail",
       "circuitName": "Losail International Circuit",
@@ -191,7 +200,7 @@
     },
     {
       "season": 2026,
-      "round": 22,
+      "round": 23,
       "raceName": "Abu Dhabi Grand Prix",
       "circuitId": "yas_marina",
       "circuitName": "Yas Marina Circuit",
